@@ -1,0 +1,57 @@
+<mat-card class="goal-card" [ngClass]="{
+    'in-progress': goalObj.status === 'in_progress',
+    'success': goalObj.status === 'success',
+    'failure': goalObj.status === 'failure'
+  }">
+  <mat-card-header>
+    <mat-card-title>
+      <div class="goal-title" (click)="toggleCardBodyVisible()">
+        {{ goalObj.goal_title }}
+        <button mat-icon-button (click)="toggleCardBodyVisible()" *ngIf="!isCardBodyVisible">
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <button mat-icon-button (click)="toggleCardBodyVisible()" *ngIf="isCardBodyVisible">
+          <mat-icon>expand_less</mat-icon>
+        </button>
+      </div>
+      <div class="more-button">
+        <button mat-icon-button (click)="handleEditGoal()" matTooltip="Edit Goal">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="handleCopyGoal()" matTooltip="Copy Goal to other date">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+        <button mat-icon-button (click)="handleDeleteGoal()" matTooltip="Delete Goal">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-subtitle class="subtitle">
+    <b>Created on:</b>
+    {{ goalObj.created_date?.format("DD-MM-YYYY, h:mm:ss a") }}
+    <b>Last Updated on:</b>
+    {{ goalObj.updated_date?.format("DD-MM-YYYY, h:mm:ss a") }}
+  </mat-card-subtitle>
+  <mat-card-content class="dashboard-card-content" *ngIf="isCardBodyVisible">
+    <mat-button-toggle-group [formControl]="goalStatus" class="status-buttons" (change)="handleUpdateStatus()">
+      <mat-button-toggle *ngFor="let st of Statuses" [value]="st.value" [matTooltip]="st.text">
+        <mat-icon>{{ st.icon }}</mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+    <div class="subtitle">
+      <b>Priority:</b> {{ getPriorityText(goalObj.priority) }}
+    </div>
+    <div class="subtitle">
+      <b>Goal Type:</b> {{ getGoalType(goalObj.goal_type) }}
+    </div>
+    <div *ngIf="goalObj.target_val || 0 > 0" class="subtitle">
+      <b>Progress:</b> {{ goalObj.actual_val }} / {{ goalObj.target_val }}
+    </div>
+    <div class="subtitle"><b>Description:</b></div>
+    <p class="description" [innerHtml]="goalObj.goal_description"></p>
+    <div class="subtitle">
+      <b>Closing Comment:</b> {{ goalObj.close_comment || "N/A" }}
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,89 @@
+<div class="my-card mat-elevation-z2" *ngIf="isCardVisible">
+    <div class="card-header mat-elevation-z2">
+        <div class="card-title">{{ goalObj.goal_title|titlecase }}</div>
+        <mat-chip-list>
+            <mat-basic-chip class="custom-chip" selected>
+                {{ goalObj.goal_type|titlecase }} Goal
+            </mat-basic-chip>
+            <mat-basic-chip class="custom-chip" selected>
+                {{ goalObj.priority|titlecase }} Priority
+            </mat-basic-chip>
+            <mat-basic-chip class="custom-chip" selected>
+                Target Date: {{ goalObj.target_date?.format("DD-MM-YYYY") }}
+            </mat-basic-chip>
+            <mat-basic-chip class="custom-chip" selected>
+                Progress: {{ goalObj.completed_parts }}/{{ goalObj.total_parts }}
+            </mat-basic-chip>
+        </mat-chip-list>
+    </div>
+
+    <div class="card-body" fxLayout="column" fxLayoutAlign="space-between stretch" fxLayoutGap="5px">
+        <div class="card-body-title" (click)="toggleCardBodyVisible()">
+            <b>Details</b>
+            <button mat-icon-button (click)="toggleCardBodyVisible()" *ngIf="!isCardBodyVisible">
+                <mat-icon>expand_more</mat-icon>
+            </button>
+            <button mat-icon-button (click)="toggleCardBodyVisible()" *ngIf="isCardBodyVisible">
+                <mat-icon>expand_less</mat-icon>
+            </button>
+        </div>
+        <div *ngIf="isCardBodyVisible">
+            <div fxflex class="detail-div mat-elevation-z3">
+                <b>Description:</b>
+                <p [innerHtml]="goalObj.description"></p>
+            </div>
+            <div fxflex class="detail-div mat-elevation-z3">
+                <b>Expected Outcome:</b>
+                <p [innerHtml]="goalObj.outcome"></p>
+            </div>
+            <div fxflex class="detail-div mat-elevation-z3">
+                <b>Obstacles:</b>
+                <p [innerHtml]="goalObj.obstacles"></p>
+            </div>
+            <div fxflex class="detail-div mat-elevation-z3">
+                <b>Plan:</b>
+                <p [innerHtml]="goalObj.plan"></p>
+            </div>
+            <div fxflex class="detail-div mat-elevation-z3">
+                <p><b>Closing Comments:</b> {{ goalObj.closing_comment }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer mat-elevation-z1">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
+                <div fxflex><b>Created Date:</b> {{ goalObj.created_date?.format("DD-MM-YYYY h:mm:ss a") }}</div>
+                <div fxflex><b>Updated Date:</b> {{ goalObj.updated_date?.format("DD-MM-YYYY h:mm:ss a") }}</div>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px" fxLayout.xs="column"
+                fxLayoutAlign.xs="start start">
+                <button *ngIf="isCurrentLtgTab()" (click)="handleStatusChange('successful')" color="primary"
+                    mat-raised-button matTooltip="Mark Complete">
+                    <mat-icon>done</mat-icon> Completed
+                </button>
+                <button *ngIf="isCurrentLtgTab()" (click)="handleStatusChange('failed')" color="primary"
+                    mat-raised-button matTooltip="Mark Failed">
+                    <mat-icon>close</mat-icon> Mark Failed
+                </button>
+                <button *ngIf="isCurrentLtgTab()" (click)="handleStatusChange('archived')" color="primary"
+                    mat-raised-button matTooltip="Mark Failed">
+                    <mat-icon>archive</mat-icon> Archive
+                </button>
+                <button *ngIf="tab && !isCurrentLtgTab()" (click)="handleStatusChange('current')" color="primary"
+                    mat-raised-button matTooltip="Move to Current">
+                    <mat-icon>assignment</mat-icon> Current
+                </button>
+
+                <button color="primary" (click)="handleEdit()" mat-raised-button matTooltip="Edit Form will open">
+                    <mat-icon>edit</mat-icon> Edit
+                </button>
+                <button *ngIf="isCurrentLtgTab()" color="primary" (click)="handleDelete()" mat-raised-button
+                    matTooltip="Delete goal">
+                    <mat-icon>delete</mat-icon> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+.dashboard-card {
+    position: relative;
+    margin-top: 10px;
+    height: auto;
+}
+
+.divider {
+    margin: 10px 20px;
+    color: #878484;
+}

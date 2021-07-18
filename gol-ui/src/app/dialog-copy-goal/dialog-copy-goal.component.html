@@ -1,0 +1,42 @@
+<h1 mat-dialog-title>Copy Goal</h1>
+<div mat-dialog-content [formGroup]="copyForm" style="height: calc(100% - 80px)">
+    <div fxLayout="column" fxLayoutAlign="space-between  none" fxLayoutGap="8px" class="flex-container">
+        <div class="title mat-elevation-z2">
+            {{data.goal.goal_title}}
+        </div>
+        <div fxflex>
+            <mat-form-field class="full-width">
+                <mat-select placeholder="Interval" formControlName="interval"
+                    (selectionChange)="handleIntervalChange()">
+                    <mat-option *ngFor="let entry of intervals" [value]="entry.value">
+                        {{ entry.text }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="copyForm.controls['interval'].hasError('required')">
+                    Interval is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div fxflex>
+            <mat-form-field class="full-width">
+                <input matInput placeholder="Interval Date" [matDatepicker]="picker" formControlName="startDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div fxflex>
+            <mat-checkbox (change)="isRepeatedChanged($event)" [formControl]="isRepeated">
+                Repeated
+            </mat-checkbox>
+            <mat-form-field class="full-width">
+                <input matInput type="number" placeholder="Repeat count" formControlName="repeatCount" />
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions align="end">
+    <button mat-button class="mat-primary" mat-dialog-close>Cancel</button>
+    <button mat-button class="mat-primary" (click)="onSubmit()" cdkFocusInitial>
+        Save
+    </button>
+</div>

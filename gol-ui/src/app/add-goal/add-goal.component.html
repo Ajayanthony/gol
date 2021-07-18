@@ -1,0 +1,76 @@
+<h1 mat-dialog-title>
+  Add {{ summaryTitle }} for {{ intervalDatesText }}
+</h1>
+<div mat-dialog-content [formGroup]="goalForm" style="height: calc(100% - 96px)">
+  <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="10px" fxLayout.xs="column" class="flex-container">
+    <div fxFlex>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Goal Title" formControlName="goalTitle" />
+        <mat-error *ngIf="goalForm.controls['goalTitle'].hasError('required')">
+          Goal title is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px" fxLayout.xs="column" class="flex-container">
+    <div fxFill>
+      <!-- <mat-form-field class="full-width"> -->
+        <ckeditor [editor]="ckEditor" formControlName="goalDescription"></ckeditor>
+        <!-- <textarea matInput placeholder="Goal Description" formControlName="goalDescription"></textarea> -->
+      <!-- </mat-form-field> -->
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-between  none" fxLayoutGap="8px" fxLayout.xs="column" class="flex-container">
+    <div fxflex>
+      <mat-form-field [class]="formFieldClass">
+        <mat-select placeholder="Interval" [formControl]="interval">
+          <mat-option *ngFor="let entry of intervals" [value]="entry.value">
+            {{ entry.text }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxflex>
+      <mat-form-field [class]="formFieldClass">
+        <input matInput placeholder="Interval Date" [matDatepicker]="picker" [formControl]="startDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div fxflex>
+      <mat-form-field [class]="formFieldClass">
+        <input matInput type="number" placeholder="Target Value" formControlName="targetValue" />
+      </mat-form-field>
+    </div>
+    <div fxflex>
+      <mat-form-field [class]="formFieldClass">
+        <mat-select placeholder="Priority" formControlName="goalPriority">
+          <mat-option *ngFor="let priority of goalPriorities" [value]="priority.value">
+            {{ priority.text }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="goalForm.controls['goalPriority'].hasError('required')">
+          Priority is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div fxflex>
+      <mat-form-field [class]="formFieldClass">
+        <mat-select placeholder="Category" formControlName="goalType">
+          <mat-option *ngFor="let gType of goalTypes" [value]="gType.value">
+            {{ gType.text }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="goalForm.controls['goalType'].hasError('required')">
+          Category is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button class="mat-primary" mat-dialog-close>Cancel</button>
+  <button mat-button class="mat-primary" (click)="onSubmit()" cdkFocusInitial>Save</button>
+</div>

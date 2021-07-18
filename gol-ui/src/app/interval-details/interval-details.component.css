@@ -1,0 +1,41 @@
+.grid-container {
+  width: 80%;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: center;
+}
+
+.header {
+  font-family: 'Poppins', sans-serif;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.success-chip {
+  background-color: #2d9124d9;
+  border-radius: 5px;
+}
+
+.custom-chip {
+  display: inline-flex;
+  padding: 1px 11px;
+  border-radius: 16px;
+  align-items: center;
+  cursor: default;
+  min-height: 22px;
+  height: 1px;
+  font-size: 10px;
+  color: white;
+  background-color: #7db557;
+  margin-left: 5px;
+}
+/* 
+::ng-deep .mat-datepicker-toggle {
+  display: none;
+} */

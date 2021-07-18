@@ -1,0 +1,65 @@
+<mat-toolbar color="primary" class="mat-elevation-z2">
+  <span *ngIf="!(isHandset$ | async)" class="example-spacer"></span>
+  <span class="header">
+    {{ summaryTitle }}
+  </span>
+  <span class="example-spacer"></span>
+  <div fxflex>
+    <button mat-icon-button matTooltip="Add New Goal" (click)="showAddGoalForm()">
+      <mat-icon>add_task</mat-icon>
+    </button>
+  </div>
+  <div fxflex>
+    <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Sort By">
+      <mat-icon>sort</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <ng-template matMenuContent>
+        <button mat-menu-item *ngFor="let entry of sortFields" (click)="updateSortField(entry)">
+          <span>{{ entry | titlecase }}</span>
+        </button>
+      </ng-template>
+    </mat-menu>
+  </div>
+</mat-toolbar>
+<p></p>
+<div class="flex-container">
+  <div [ngClass]="{'grid-container': (isHandset$ | async) === false }">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" fxLayout.xs="column"
+      fxLayoutAlign.xs="start center">
+      <div fxflex>
+        <mat-chip-list>
+          <mat-basic-chip selected class="custom-chip mat-elevation-z2">
+            <mat-icon>double_arrow</mat-icon>In Progress: {{goalsList.stats.in_progress}}
+          </mat-basic-chip>
+          <mat-basic-chip selected class="custom-chip mat-elevation-z2">
+            <mat-icon>done</mat-icon>Success: {{goalsList.stats.success}}
+          </mat-basic-chip>
+          <mat-basic-chip selected class="custom-chip mat-elevation-z2">
+            <mat-icon>close</mat-icon>Failure: {{goalsList.stats.failure}}
+          </mat-basic-chip>
+        </mat-chip-list>
+      </div>
+      <div fxflex>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" fxLayoutAlign.xs="start center">
+          <div fxflex>
+            <button color="primary" mat-icon-button matTooltip="Prev" (click)="nextDateButtonClickHandler(-1)">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+
+            <button mat-flat-button (click)="picker.open()">{{ intervalDatesText }}</button>
+            <mat-form-field color="primary" style="max-width: 0px;">
+              <input matInput [matDatepicker]="picker" [formControl]="startDate" (dateChange)="handleDateChange()">
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <button color="primary" mat-icon-button matTooltip="Next" (click)="nextDateButtonClickHandler(1)">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-goals-list #goalsList [goalsList]="goalsList$ | async" [sortBy]="sortBy"></app-goals-list>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<mat-list>
+    <div *ngFor="let sortField of order">
+        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px" class="divider"
+            *ngIf="goalsList[sortField.value].length > 0">
+            <div>{{ sortField.text }} {{ sortField.desc }}</div>
+            <mat-divider fxFlex></mat-divider>
+        </div>
+        <mat-list-item *ngFor="let goalRef of goalsList[sortField.value]" class="dashboard-card">
+            <app-goal-card [goalRef]="goalRef" style="width: 100%;" (goalUpdated)="updateGoalsList()"></app-goal-card>
+        </mat-list-item>
+    </div>
+</mat-list>
+<p></p>

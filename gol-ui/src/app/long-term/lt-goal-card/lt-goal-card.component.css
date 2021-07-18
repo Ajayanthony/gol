@@ -1,0 +1,66 @@
+.my-card {
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+}
+
+.card-header {
+  padding: 15px;
+  background-color: white;
+  border-radius: 5px 5px 0 0;
+  border-bottom: solid lightgray 1.5px;
+}
+
+.card-title {
+  font-family: "Poppins", sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.card-body {
+  background-color: rgb(242, 243, 243);
+}
+
+.card-body-title {
+  background-color: white;
+  padding-left: 15px;
+  font-size: 14px;
+}
+
+.card-footer {
+  padding: 15px;
+  border-radius: 0 0 5px 5px;
+  border-top: solid lightgray 1.5px;
+  font-size: xx-small;
+  color: #6a6868;
+}
+
+.card-footer-title {
+  background-color: white;
+  padding-left: 15px;
+}
+
+.detail-div {
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 0 10px 10px 10px;
+  white-space: pre-line;
+}
+
+.custom-chip {
+  display: inline-flex;
+  padding: 1px 11px;
+  border-radius: 16px;
+  align-items: center;
+  cursor: default;
+  min-height: 18px;
+  height: 1px;
+  font-size: 10px;
+  color: white;
+  background-color: #58984b;
+  margin-left: 5px;
+}

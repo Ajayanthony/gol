@@ -1,0 +1,77 @@
+.mat-card {
+  padding: 10px;
+}
+
+:host ::ng-deep .mat-card-header-text {
+  margin-left: 5px;
+}
+
+.mat-card-header .mat-card-title {
+  margin-bottom: 0px;
+}
+
+.more-button {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+
+.status-buttons {
+  float: right;
+  margin-right: 20px;
+}
+
+.goal-title {
+  margin-right: 90px;
+  font-size: smaller;
+}
+
+.subtitle {
+  margin-left: 5px;
+}
+
+.description {
+  display: inline-block;
+  margin: 5px;
+  white-space: pre-line;
+}
+
+.goal-card {
+  font-family: 'Lora', serif;
+}
+
+.in-progress {
+  border: solid 2px #7b86c7;
+}
+
+.in-progress .goal-title {
+  color:#3030cd;
+}
+
+.in-progress .mat-icon-button {
+  color: #7b86c7;
+}
+
+.success {
+  border: solid 2px lightgreen;
+}
+
+.success .goal-title {
+  color:darkgreen;
+}
+
+.success .mat-icon-button {
+  color:lightgreen;
+}
+
+.failure {
+  border: solid 2px #f2a99c;
+}
+
+.failure .goal-title {
+  color: indianred;
+}
+
+.failure .mat-icon-button {
+  color: #f2a99c;
+}

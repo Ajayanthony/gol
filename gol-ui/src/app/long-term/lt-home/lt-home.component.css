@@ -1,0 +1,9 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.header {
+  font-family: 'Poppins', sans-serif;
+  margin-top: 10px;
+  font-weight: bold;
+}

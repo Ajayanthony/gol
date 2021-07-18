@@ -1,0 +1,22 @@
+.full-width {
+  width: 100%;
+}
+
+.mat-radio-button {
+  display: block;
+  margin: 5px 0;
+}
+
+textarea {
+    height:100px;
+    resize: vertical;
+}
+
+.width100 {
+  width: 150px;
+}
+
+:host ::ng-deep .ck-editor__editable_inline {
+    height:100px;
+    margin-bottom: 10px;
+}

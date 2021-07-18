@@ -1,0 +1,14 @@
+.full-width {
+  width: 100%;
+}
+
+.width100 {
+  width: 150px;
+}
+
+.title {
+  display: flex;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: lemonchiffon;
+}

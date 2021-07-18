@@ -1,0 +1,21 @@
+.tab-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px;
+}
+
+.dashboard-card {
+    position: relative;
+    margin-top: 10px;
+    height: auto;
+}
+
+.divider {
+    margin: 10px 20px;
+    color: #878484;
+}
+
+.width-100-pc {
+  width: 100%;
+}

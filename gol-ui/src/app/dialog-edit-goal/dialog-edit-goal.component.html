@@ -1,0 +1,78 @@
+<h1 mat-dialog-title>Edit Goal</h1>
+<div mat-dialog-content [formGroup]="goalForm" style="height: calc(100% - 80px)">
+ <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="10px" fxLayout.xs="column" class="flex-container">
+    <div fxFlex="80">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Goal Title" formControlName="goalTitle" />
+        <mat-error *ngIf="goalForm.controls['goalTitle'].hasError('required')">
+          Goal title is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div fxFlexAlign="stretch">
+      <mat-button-toggle-group [formControl]="goalStatus" class="status-buttons" (change)="onStatusUpdate()">
+        <mat-button-toggle *ngFor="let st of Statuses" [value]="st.value" [matTooltip]="st.text">
+          <mat-icon>{{ st.icon }}</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px" class="flex-container">
+    <div fxFill>
+      <!-- <mat-form-field class="full-width">
+        <textarea matInput placeholder="Goal Description" formControlName="goalDescription"></textarea>
+      </mat-form-field> -->
+      <ckeditor [editor]="ckEditor" formControlName="goalDescription"></ckeditor>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px" fxLayout.xs="column" class="flex-container">
+    <div fxflex>
+      <mat-form-field class="full-width">
+        <input matInput type="number" placeholder="Actual Value" formControlName="actualValue" />
+      </mat-form-field>
+    </div>
+    <div fxflex>
+      <mat-form-field class="full-width">
+        <input matInput type="number" placeholder="Target Value" formControlName="targetValue" />
+      </mat-form-field>
+    </div>
+    <div fxflex>
+      <mat-form-field class="full-width">
+        <mat-select placeholder="Priority" formControlName="goalPriority">
+          <mat-option *ngFor="let priority of goalPriorities" [value]="priority.value">
+            {{ priority.text }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="goalForm.controls['goalPriority'].hasError('required')">
+          Priority is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div fxflex>
+      <mat-form-field class="full-width">
+        <mat-select placeholder="Category" formControlName="goalType">
+          <mat-option *ngFor="let gType of goalTypes" [value]="gType.value">
+            {{ gType.text }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="goalForm.controls['goalType'].hasError('required')">
+          Category is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start  none" fxLayoutGap="10px" fxLayout.xs="column" class="flex-container">
+    <div fxFill>
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Close Comment" formControlName="closeComment" />
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <div class="save-text">{{ autoSavedText }}</div>
+  <button mat-button class="mat-primary" mat-dialog-close>Cancel</button>
+  <button mat-button class="mat-primary" (click)="onSubmit()" cdkFocusInitial>
+    Save
+  </button>
+</div>

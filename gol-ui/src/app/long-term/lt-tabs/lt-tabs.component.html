@@ -1,0 +1,33 @@
+<mat-tab-group dynamicHeight (selectedTabChange)="handleTabChange($event.index)">
+    <mat-tab [label]="ltgTab.text" *ngFor="let ltgTab of ltgHomeTabs">
+        <ng-template matTabContent>
+            <div class="tab-content">
+                <mat-list class="width-100-pc">
+                    <div *ngFor="let key of currentLtgs|objectkeys">
+                        <!-- <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px" class="divider"
+                        *ngIf="currentLtgs[entry.key].length > 0">
+                        <div>{{ entry.key|titlecase }}</div>
+                        <mat-divider fxFlex></mat-divider>
+                    </div> -->
+                        <mat-list-item *ngFor="let goalRef of currentLtgs[key]" class="dashboard-card">
+                            <app-lt-goal-card class="width-100-pc" [goalObj]="goalRef" [tab]="ltgTab.value">
+                            </app-lt-goal-card>
+                        </mat-list-item>
+                    </div>
+                </mat-list>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <!-- <mat-tab [label]="ltgTab.text" *ngFor="let ltgTab of ltgTabs|slice:1">
+        <ng-template #otherStatusTemplate matTabContent>
+            <div class="tab-content">
+                <mat-list class="width-100-pc">
+                    <mat-list-item *ngFor="let goalRef of pastLtgs" class="dashboard-card">
+                        <app-lt-goal-card class="width-100-pc" [goalObj]="goalRef" [tab]="ltgTab.value">
+                        </app-lt-goal-card>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+        </ng-template>
+    </mat-tab> -->
+</mat-tab-group>
