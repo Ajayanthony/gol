@@ -1,0 +1,1 @@
+exports.dbConnectionString = "mongodb://gol_service:gol@localhost:27018/gol%5fdb";
