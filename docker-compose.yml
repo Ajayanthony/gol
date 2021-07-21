@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+  gol-frontend:
+    build: gol-ui
+    ports:
+      - 11001:80
+    container_name: gol-frontend
+    restart: always
+
+  gol-backend:
+    container_name: gol-backend
+    restart: always
+    build: gol-backend
+    networks:
+      - mongo-network
+    ports:
+      - 11002:8000
+networks:
+    mongo-network:
+      external: true

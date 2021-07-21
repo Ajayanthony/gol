@@ -6,7 +6,8 @@ const weeklyGoalsRouter = require("./routes/weekly-goal-router");
 const monthlyGoalsRouter = require("./routes/monthly-goal-router");
 const ltGoalsRouter = require("./routes/lt-goal-router");
 const app = express();
-const port = 8000;
+const PORT = 8000;
+const HOST = "0.0.0.0";
 const apiUrl = '/api/v1';
 const goalUrl = apiUrl + '/goal';
 const dailygoalUrl = apiUrl + '/dailygoal';
@@ -32,6 +33,5 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 });
 
-app.listen(port, () => {
-    console.log(`Gol app running on port ${port}`);
-})
+app.listen(PORT, HOST);
+console.log(`Running on http://${HOST}:${PORT}`);
