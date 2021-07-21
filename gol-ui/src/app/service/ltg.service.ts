@@ -2,11 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { API_URL } from '../common/constants';
 import { LtGoal } from '../common/LtGoal';
 import { createLtGoal } from '../common/utils';
 import { ErrorHandler } from './error-handler.service';
 
-const ltUrl = 'http://localhost:8000/api/v1/longterm/';
+const ltUrl = API_URL + 'longterm/';
 
 @Injectable({
   providedIn: 'root',

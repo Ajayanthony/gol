@@ -18,24 +18,26 @@ export const GoalStatuses = [
   { value: 'failure', text: 'Failure', icon: 'close', desc: '' },
 ];
 
+export const API_URL = 'http://localhost:8000/api/v1/';
+
 export const Intervals = [
   {
     value: 'daily',
     text: 'Daily',
     desc: 'Daily Goals',
-    baseUrl: 'http://localhost:8000/api/v1/dailygoal/',
+    baseUrl: API_URL + 'dailygoal/',
   },
   {
     value: 'weekly',
     text: 'Weekly',
     desc: 'Weekly Goals',
-    baseUrl: 'http://localhost:8000/api/v1/weeklygoal/',
+    baseUrl: API_URL + 'weeklygoal/',
   },
   {
     value: 'monthly',
     text: 'Monthly',
     desc: 'Monthly Goals',
-    baseUrl: 'http://localhost:8000/api/v1/monthlygoal/',
+    baseUrl: API_URL + 'monthlygoal/',
   },
 ];
 
