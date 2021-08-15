@@ -13,6 +13,13 @@ export function getStatusText(value: string): string {
   return status;
 }
 
+export function getHostURL(): string {
+  console.log(
+    window.location.protocol + '//' + window.location.hostname + ":" + 11002
+  );
+  return window.location.protocol + '//' + window.location.hostname + ":" + 11002;
+}
+
 export function getIntervalBaseUrl(interval: string): string {
   let url = Intervals[0].baseUrl;
   for (const entry of Intervals) {

@@ -9,6 +9,7 @@ import { ErrorHandler } from './error-handler.service';
 import {
   createIGoal,
   getAddCharacterForInterval,
+  getHostURL,
   getIntervalBaseUrl,
 } from '../common/utils';
 
@@ -24,7 +25,7 @@ export class IntervalService {
   constructor(private http: HttpClient, private errorHandler: ErrorHandler) {}
 
   addIntervalGoal(interval: string, startDate: Moment, goal: IGoal) {
-    const url = getIntervalBaseUrl(interval);
+    const url = getHostURL() + getIntervalBaseUrl(interval);
     return this.http
       .post(url + startDate.format('DD-MM-YYYY'), goal)
       .pipe(catchError((error) => this.errorHandler.handleError(error)));
@@ -33,7 +34,7 @@ export class IntervalService {
   getIntervalGoals(interval: string, date: Moment) {
     this.interval = interval;
     this.startDate = date;
-    const url = getIntervalBaseUrl(interval);
+    const url = getHostURL() + getIntervalBaseUrl(interval);
     this.http
       .get<any>(url + date.format('DD-MM-YYYY'))
       .pipe(catchError((error) => this.errorHandler.handleError(error)))
@@ -64,7 +65,7 @@ export class IntervalService {
   }
 
   deleteGoal(goalId: string) {
-    const url = getIntervalBaseUrl(this.interval);
+    const url = getHostURL() + getIntervalBaseUrl(this.interval);
     return this.http
       .post(url + 'delete/' + this.startDate.format('DD-MM-YYYY'), {
         goalId: goalId,

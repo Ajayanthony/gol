@@ -18,7 +18,7 @@ export const GoalStatuses = [
   { value: 'failure', text: 'Failure', icon: 'close', desc: '' },
 ];
 
-export const API_URL = 'http://localhost:11002/api/v1/';
+export const API_URL = '/api/v1/';
 
 export const Intervals = [
   {

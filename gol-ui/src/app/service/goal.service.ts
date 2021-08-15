@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, tap } from 'rxjs/operators';
+import { API_URL } from '../common/constants';
+import { getHostURL } from '../common/utils';
 import { ErrorHandler } from './error-handler.service';
 import { NotifierService } from './notifier.service';
 
-const updateGoalStatusUrl = 'http://localhost:8000/api/v1/goal/statusupdate/';
-const editGoalUrl = 'http://localhost:8000/api/v1/goal/edit/';
+const updateGoalStatusUrl = getHostURL() + API_URL + 'goal/statusupdate/';
+const editGoalUrl = getHostURL() + API_URL + 'goal/edit/';
 
 @Injectable({
   providedIn: 'root',

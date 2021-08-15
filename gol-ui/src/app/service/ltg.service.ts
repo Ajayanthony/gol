@@ -4,10 +4,10 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { API_URL } from '../common/constants';
 import { LtGoal } from '../common/LtGoal';
-import { createLtGoal } from '../common/utils';
+import { createLtGoal, getHostURL } from '../common/utils';
 import { ErrorHandler } from './error-handler.service';
 
-const ltUrl = API_URL + 'longterm/';
+const ltUrl = getHostURL() + API_URL + 'longterm/';
 
 @Injectable({
   providedIn: 'root',
