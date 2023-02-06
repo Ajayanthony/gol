@@ -9,7 +9,12 @@ import { DialogCopyGoalComponent } from '../dialog-copy-goal/dialog-copy-goal.co
 import { NotifierService } from '../service/notifier.service';
 import { IntervalService } from '../service/interval.service';
 import { IGoal } from '../common/Goal';
-import { GoalStatuses, GoalTypes, GoalPriorities } from '../common/constants';
+import {
+  GoalStatuses,
+  GoalTypes,
+  GoalPriorities,
+  PriorityIcons,
+} from '../common/constants';
 import { DialogGoalStatusUpdateComponent } from '../dialog-goal-status-update/dialog-goal-status-update.component';
 import { GoalService } from '../service/goal.service';
 import { DialogEditGoalComponent } from '../dialog-edit-goal/dialog-edit-goal.component';
@@ -24,6 +29,7 @@ export class GoalCardComponent implements OnInit {
   @Output('goalUpdated') goalUpdated: EventEmitter<void> = new EventEmitter();
 
   Statuses = GoalStatuses;
+  Icons = PriorityIcons;
   isCardBodyVisible: boolean = false;
 
   goalStatus: FormControl = new FormControl();
@@ -39,8 +45,8 @@ export class GoalCardComponent implements OnInit {
     this.goalStatus.setValue(this.goalObj.status);
   }
 
-  handleUpdateStatus() {
-    const dialogClosed$ = this.openStatusUpdateDialog(this.goalStatus.value);
+  handleUpdateStatus(newStatus: string) {
+    const dialogClosed$ = this.openStatusUpdateDialog(newStatus);
     this.saveGoalOnStatusUpdate(dialogClosed$);
   }
 
@@ -69,7 +75,6 @@ export class GoalCardComponent implements OnInit {
       )
       .subscribe((combineRes) => {
         this.goalObj = Object.assign(this.goalObj, combineRes[1]);
-        this.goalObj.updated_date = moment();
         this.goalUpdated.emit();
       });
   }
@@ -111,7 +116,6 @@ export class GoalCardComponent implements OnInit {
       .subscribe((combineRes: Array<any>) => {
         if (combineRes[0]?.result > 0) {
           this.goalObj = Object.assign(this.goalObj, combineRes[1]);
-          this.goalObj.updated_date = moment();
           this.goalUpdated.emit();
         }
       });
@@ -125,8 +129,16 @@ export class GoalCardComponent implements OnInit {
     return GoalTypes.find((type) => type.value === val)?.text;
   }
 
+  getGoalTypeIcon(val: string) {
+    return GoalTypes.find((type) => type.value === val)?.icon;
+  }
+
+  getGoalTypeIconColor(val: string) {
+    return GoalTypes.find((type) => type.value === val)?.icon_class;
+  }
+
   getPriorityText(val: string) {
-    return GoalPriorities.find((p) => p.value === val)?.text;
+    return GoalPriorities.find((p) => p.value === val)?.text + ' Priority';
   }
 
   replaceUrls(message: string) {

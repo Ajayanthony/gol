@@ -1,37 +1,31 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav mat-elevation-z2" fixedInViewport
-    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="(isHandset$ | async) === false">
+  <mat-sidenav #drawer class="sidenav mat-elevation-z2" fixedInViewport [attr.role]="'dialog'" mode='over' opened=false>
     <mat-toolbar class="mat-elevation-z2">
-      <mat-icon>sports_soccer</mat-icon> <span class="menu-item-span">GOL MENU</span>
+      <mat-icon>sports_soccer</mat-icon> <span class="menu-item-span">MENU</span>
     </mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item class="menu-item mat-elevation-z1" routerLink="/interval-details" [fragment]="intervals[0].value" routerLinkActive="active">
-        <mat-icon>checklist</mat-icon>
-        <span class="menu-item-span">Day</span>
-      </a>
-      <mat-divider></mat-divider>
-      <a mat-list-item class="menu-item mat-elevation-z1" routerLink="/interval-details" [fragment]="intervals[1].value" routerLinkActive="active">
-        <mat-icon>format_list_bulleted</mat-icon>
-        <span class="menu-item-span">Week</span>
-      </a>
-      <mat-divider></mat-divider>
-      <a mat-list-item class="menu-item mat-elevation-z1" routerLink="/interval-details" [fragment]="intervals[2].value" routerLinkActive="active">
-        <mat-icon>date_range</mat-icon>
-        <span class="menu-item-span">Month</span>
-      </a>
-      <mat-divider></mat-divider>
       <a mat-list-item routerLink="/longterm" routerLinkActive="active" class="menu-item mat-elevation-z1">
         <mat-icon>star_rate</mat-icon>
         <span class="menu-item-span">Long Term</span>
       </a>
       <mat-divider></mat-divider>
+      <a mat-list-item class="menu-item mat-elevation-z1" routerLink="/interval-details" [fragment]="intervals[2].value"
+        routerLinkActive="active">
+        <mat-icon>date_range</mat-icon>
+        <span class="menu-item-span">Month</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item class="menu-item mat-elevation-z1" routerLink="/interval-details" [fragment]="intervals[1].value"
+        routerLinkActive="active">
+        <mat-icon>format_list_bulleted</mat-icon>
+        <span class="menu-item-span">Week</span>
+      </a>
+      <mat-divider></mat-divider>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar *ngIf="isHandset$ | async" color="primary">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
+    <mat-toolbar color="primary">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span>MY GOALS</span>

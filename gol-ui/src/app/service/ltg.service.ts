@@ -16,7 +16,6 @@ export class LtgService {
   private ltgToEdit: Subject<LtGoal> = new BehaviorSubject<LtGoal>(
     {} as LtGoal
   );
-  private sortByField: Subject<string> = new BehaviorSubject<string>('');
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandler) {}
 
@@ -24,17 +23,9 @@ export class LtgService {
     this.ltgToEdit.next(ltg);
   }
 
-  getLtgToEdit$() {
-    return this.ltgToEdit.asObservable();
-  }
-
-  getSortField$() {
-    return this.sortByField.asObservable();
-  }
-
-  setSortField(field: string) {
-    this.sortByField.next(field);
-  }
+  // getLtgToEdit$() {
+  //   return this.ltgToEdit.asObservable();
+  // }
 
   addLtg(ltg: any) {
     return this.http

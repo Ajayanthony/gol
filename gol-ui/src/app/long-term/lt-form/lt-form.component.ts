@@ -1,17 +1,19 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import * as moment from 'moment';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 import {
   GoalPriorities,
   ltgDateFormat,
   LtgType,
 } from 'src/app/common/constants';
-
 import { LtGoal } from 'src/app/common/LtGoal';
 import { LtgService } from 'src/app/service/ltg.service';
 import { NotifierService } from 'src/app/service/notifier.service';
+import { BreakpointService } from '../../service/breakpoint.service';
 
 export enum FormType {
   ADD = 'add',
@@ -32,41 +34,52 @@ export class LtFormComponent implements OnInit {
   formTitle: string = '';
   goalPriorities = GoalPriorities;
   ltgTypes = LtgType;
+  formFieldClass = 'width150';
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private notifierService: NotifierService,
     private ltgService: LtgService,
-    private router: Router
+    private router: Router,
+    public dialogRef: MatDialogRef<LtFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private breakPoint: BreakpointService
   ) {
     this.setupLtgForm();
+
+    if (data.action === 'add') {
+      this.formType = FormType.ADD;
+      this.formTitle = 'Add a goal';
+      this.baseLtg = {} as LtGoal;
+      this.updateLtgFormValues();
+    } else if (data.action === 'edit' && data.goalId) {
+      this.formType = FormType.EDIT;
+      this.formTitle = 'Edit goal';
+      this.goalId = data.goalId;
+      this.ltgService.getLtgById(this.goalId!).subscribe((ltg) => {
+        if (ltg) {
+          this.baseLtg = ltg;
+          this.updateLtgFormValues();
+        } else {
+          this.closeDialog('failure');
+          this.notifierService.notify('Could not load LT Goal.');
+        }
+      });
+    } else {
+      this.notifierService.notify('Dialog did not receive expected inputs.');
+      this.closeDialog('failure');
+    }
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      console.log('open form');
-      if (params.action === 'add') {
-        this.formType = FormType.ADD;
-        this.formTitle = 'Add New LTG';
-        this.baseLtg = {} as LtGoal;
-        this.updateLtgFormValues();
-      } else if (params.action === 'edit' && params.goalId) {
-        this.formType = FormType.EDIT;
-        this.formTitle = 'Edit LTG';
-        this.goalId = params.goalId;
-        this.ltgService.getLtgById(this.goalId!).subscribe((ltg) => {
-          if (ltg) {
-            this.baseLtg = ltg;
-            this.updateLtgFormValues();
-          } else {
-            this.navigateToLtgPage();
-            this.notifierService.notify('Could not load LT Goal.');
-          }
-        });
+    this.breakPoint.getIsHandset$().subscribe((isHandset) => {
+      if (isHandset) {
+        this.dialogRef.updateSize('90%', '90%');
+        this.formFieldClass = 'full-width';
       } else {
-        this.notifierService.notify('Edit Error: Goal Id was not passed.');
-        this.navigateToLtgPage();
+        this.dialogRef.updateSize('65%', '65%');
+        this.formFieldClass = 'width150';
       }
     });
   }
@@ -75,10 +88,8 @@ export class LtFormComponent implements OnInit {
     return this.formType === FormType.EDIT;
   }
 
-  navigateToLtgPage() {
-    this.router.navigate(['../'], {
-      relativeTo: this.route,
-    });
+  closeDialog(message: string) {
+    this.dialogRef.close(message);
   }
 
   onSave() {
@@ -100,10 +111,11 @@ export class LtFormComponent implements OnInit {
     this.ltgService.addLtg(changeObj).subscribe((response: any) => {
       if (response.goalId) {
         this.notifierService.notify('Lt Goal created successfully.');
+        this.closeDialog('added');
       } else {
         this.notifierService.notify('Lt Goal add request did not succeed.');
+        this.closeDialog('failure');
       }
-      this.navigateToLtgPage();
     });
   }
 
@@ -120,10 +132,11 @@ export class LtFormComponent implements OnInit {
       .subscribe((response: any) => {
         if (response.result > 0) {
           this.notifierService.notify('Lt Goal edit was successful.');
+          this.closeDialog('edited');
         } else {
           this.notifierService.notify('Lt Goal edit request did not succeed.');
+          this.closeDialog('failure');
         }
-        this.navigateToLtgPage();
       });
   }
 

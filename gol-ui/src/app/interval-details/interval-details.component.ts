@@ -3,10 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { IntervalService } from '../service/interval.service';
 import * as moment from 'moment';
-import { Intervals, SortFields } from '../common/constants';
 import { MatDialog } from '@angular/material/dialog';
+
+import { IntervalService } from '../service/interval.service';
+import { Intervals, GoalTypes } from '../common/constants';
 import { AddGoalComponent } from '../add-goal/add-goal.component';
 import { IGoal } from '../common/Goal';
 import { BreakpointService } from '../service/breakpoint.service';
@@ -19,13 +20,13 @@ import { createSummaryText } from '../common/utils';
 })
 export class IntervalDetailsComponent implements OnInit {
   goalsList$: Observable<IGoal[]> = new Observable();
-  interval: string = 'daily';
+  interval: string = 'weekly';
   startDate = new FormControl();
-  sortFields = SortFields;
-  sortBy: string = '';
+  typeFilter: FormControl = new FormControl({value:'all', text:'All Categories'});
   isHandset$: Observable<boolean>;
   summaryTitle = '';
   intervalDatesText = '';
+  goalTypes = GoalTypes;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,7 +39,7 @@ export class IntervalDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.route.fragment
-      .pipe(map((fragment) => fragment || 'daily'))
+      .pipe(map((fragment) => fragment || 'weekly'))
       .subscribe((value) => {
         this.startDate.setValue(moment());
         this.interval = value;
@@ -89,9 +90,5 @@ export class IntervalDetailsComponent implements OnInit {
 
     this.startDate.setValue(tempDate);
     this.handleDateChange();
-  }
-
-  updateSortField(field: string) {
-    this.sortBy = field;
   }
 }

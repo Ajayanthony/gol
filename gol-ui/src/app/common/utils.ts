@@ -31,14 +31,6 @@ export function getIntervalBaseUrl(interval: string): string {
   return url;
 }
 
-export function getGoalFieldGetterFn(field: string): (goal: IGoal) => string {
-  let fieldFn = (goal: IGoal) => goal.priority!;
-  if (field === SortFields[1]) fieldFn = (goal: IGoal) => goal.status!;
-  if (field === SortFields[2]) fieldFn = (goal: IGoal) => goal.goal_type!;
-
-  return fieldFn;
-}
-
 export function createIGoal(goal: any) {
   let iGoal: IGoal = {
     id: goal._id,

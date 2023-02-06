@@ -1,100 +1,95 @@
 <div class="tab-content">
-    <div class="my-card mat-elevation-z2">
-        <div class="card-header mat-elevation-z2">
-            <div class="card-title">{{ formTitle }}</div>
-        </div>
 
-        <div [formGroup]="ltgForm" class="card-body" fxLayout="column" fxLayoutAlign="space-between stretch"
-            fxLayoutGap="5px">
-            <div fxFlex>
-                <mat-form-field class="full-width">
-                    <input matInput placeholder="Goal Title" formControlName="goalTitle" />
-                    <mat-error *ngIf="ltgForm.controls['goalTitle'].hasError('required')">
-                        Goal title is <strong>required</strong>
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div fxflex>
-                <h3>Description:</h3>
-                <ckeditor [editor]="ckEditor" formControlName="description"></ckeditor>
-            </div>
-            <div fxflex>
-                <h3>Expected Outcome:</h3>
-                <ckeditor [editor]="ckEditor" formControlName="outcome"></ckeditor>
-            </div>
-            <div fxflex>
-                <h3>Obstacles:</h3>
-                <ckeditor [editor]="ckEditor" formControlName="obstacles"></ckeditor>
-            </div>
-            <div fxflex>
-                <h3>Plan:</h3>
-                <ckeditor [editor]="ckEditor" formControlName="plan"></ckeditor>
-            </div>
-            <div fxflex>
-                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="30px" fxLayout.xs="column"
-                    class="flex-container">
-                    <div fxflex>
-                        <mat-form-field class="width150">
-                            <input matInput placeholder="Target Date" [matDatepicker]="picker"
-                                formControlName="targetDate">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div fxflex>
-                        <mat-form-field class="width150">
-                            <input matInput type="number" placeholder="Total Parts" formControlName="totalParts" />
-                        </mat-form-field>
-                    </div>
-                    <div fxflex *ngIf="isFormTypeEdit()">
-                        <mat-form-field class="width150">
-                            <input matInput type="number" placeholder="Completed Parts"
-                                formControlName="completedParts" />
-                        </mat-form-field>
-                    </div>
-                    <div fxflex>
-                        <mat-form-field class="width150">
-                            <mat-select placeholder="Priority" formControlName="priority">
-                                <mat-option *ngFor="let priority of goalPriorities" [value]="priority.value">
-                                    {{ priority.text }}
-                                </mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="ltgForm.controls['priority'].hasError('required')">
-                                Priority is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                    <div fxflex>
-                        <mat-form-field class="width150">
-                            <mat-select placeholder="Category" formControlName="goalType">
-                                <mat-option *ngFor="let gType of ltgTypes" [value]="gType.value">
-                                    {{ gType.text }}
-                                </mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="ltgForm.controls['goalType'].hasError('required')">
-                                Category is <strong>required</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
+    <div class="card-title">{{ formTitle }}</div>
+
+    <div [formGroup]="ltgForm" class="card-body" fxLayout="column" fxLayoutAlign="space-between stretch"
+        fxLayoutGap="5px">
+        <div fxFlex>
+            <mat-form-field class="full-width">
+                <input matInput placeholder="Goal Title" formControlName="goalTitle" />
+                <mat-error *ngIf="ltgForm.controls['goalTitle'].hasError('required')">
+                    Goal title is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div fxflex>
+            <h3>Description:</h3>
+            <ckeditor [editor]="ckEditor" formControlName="description"></ckeditor>
+        </div>
+        <div fxflex>
+            <h3>Expected Outcome:</h3>
+            <ckeditor [editor]="ckEditor" formControlName="outcome"></ckeditor>
+        </div>
+        <div fxflex>
+            <h3>Obstacles:</h3>
+            <ckeditor [editor]="ckEditor" formControlName="obstacles"></ckeditor>
+        </div>
+        <div fxflex>
+            <h3>Plan:</h3>
+            <ckeditor [editor]="ckEditor" formControlName="plan"></ckeditor>
+        </div>
+        <div fxflex>
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="30px" fxLayout.xs="column"
+                class="flex-container">
+                <div fxflex>
+                    <mat-form-field class="width150">
+                        <input matInput placeholder="Target Date" [matDatepicker]="picker" formControlName="targetDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div fxflex>
+                    <mat-form-field class="width150">
+                        <input matInput type="number" placeholder="Total Parts" formControlName="totalParts" />
+                    </mat-form-field>
+                </div>
+                <div fxflex *ngIf="isFormTypeEdit()">
+                    <mat-form-field class="width150">
+                        <input matInput type="number" placeholder="Completed Parts" formControlName="completedParts" />
+                    </mat-form-field>
                 </div>
             </div>
-            <div fxFlex>
-                <mat-form-field class="full-width" *ngIf="isFormTypeEdit()">                 
-                    <input matInput placeholder="Closing Comments" formControlName="closingComment" />
-                </mat-form-field>
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="30px" fxLayout.xs="column"
+                class="flex-container">
+                <div fxflex>
+                    <mat-form-field class="width150">
+                        <mat-select placeholder="Priority" formControlName="priority">
+                            <mat-option *ngFor="let priority of goalPriorities" [value]="priority.value">
+                                {{ priority.text }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ltgForm.controls['priority'].hasError('required')">
+                            Priority is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div fxflex>
+                    <mat-form-field class="width150">
+                        <mat-select placeholder="Category" formControlName="goalType">
+                            <mat-option *ngFor="let gType of ltgTypes" [value]="gType.value">
+                                {{ gType.text }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="ltgForm.controls['goalType'].hasError('required')">
+                            Category is <strong>required</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
             </div>
         </div>
+        <div fxFlex>
+            <mat-form-field class="full-width" *ngIf="isFormTypeEdit()">
+                <input matInput placeholder="Closing Comments" formControlName="closingComment" />
+            </mat-form-field>
+        </div>
+    </div>
 
-        <div class="card-footer mat-elevation-z1">
-            <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="30px" fxLayout.xs="column"
-                fxLayoutAlign.xs="start start">
-                <button color="primary" mat-raised-button (click)="onSave()" matTooltip="Save LT Goal">
-                    Save
-                </button>
-                <button color="primary" mat-raised-button (click)="navigateToLtgPage()">
-                    Cancel
-                </button>
-            </div>
-        </div>
+    <div mat-dialog-actions align="end">
+        <button color="primary" mat-raised-button (click)="onSave()" matTooltip="Save LT Goal">
+            Save
+        </button>
+        <button color="primary" mat-raised-button (click)="closeDialog('failure')">
+            Cancel
+        </button>
     </div>
 </div>

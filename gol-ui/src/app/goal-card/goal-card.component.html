@@ -1,57 +1,60 @@
-<mat-card class="goal-card" [ngClass]="{
+<div class="my-card mat-elevation-z2"
+[ngClass]="{
     'in-progress': goalObj.status === 'in_progress',
     'success': goalObj.status === 'success',
     'failure': goalObj.status === 'failure'
   }">
-  <mat-card-header>
-    <mat-card-title>
-      <div class="goal-title" (click)="toggleCardBodyVisible()">
+  <div class="card-header">
+    <div class="card-title" (click)="toggleCardBodyVisible()">
+        <img class="custom-icon" [src]="Icons.get(goalObj.priority)" [alt]="goalObj.priority" 
+          [matTooltip]="getPriorityText(goalObj.priority)">
+        <mat-icon [class]="getGoalTypeIconColor(goalObj.goal_type)">
+          {{ getGoalTypeIcon(goalObj.goal_type) }}
+        </mat-icon>
         {{ goalObj.goal_title }}
-        <button mat-icon-button (click)="toggleCardBodyVisible()" *ngIf="!isCardBodyVisible">
-          <mat-icon>expand_more</mat-icon>
+    </div>
+    <div class="more-button">
+        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Edit Goal">
+          <mat-icon>more_vert</mat-icon>
         </button>
-        <button mat-icon-button (click)="toggleCardBodyVisible()" *ngIf="isCardBodyVisible">
-          <mat-icon>expand_less</mat-icon>
-        </button>
+        <mat-menu #menu="matMenu">
+          <ng-template matMenuContent>
+            <button mat-menu-item (click)="handleEditGoal()" matTooltip="Open Edit Goal dialog">
+              <mat-icon>edit</mat-icon>Edit goal
+            </button>
+            <button mat-menu-item *ngIf="goalObj.status !== 'in_progress'" (click)="handleUpdateStatus('in_progress')">
+              <mat-icon>double_arrow</mat-icon>Mark active
+            </button>
+            <button mat-menu-item *ngIf="goalObj.status !== 'success'" (click)="handleUpdateStatus('success')">
+              <mat-icon>done</mat-icon>Mark completed
+            </button>
+            <button mat-menu-item *ngIf="goalObj.status !== 'failure'" (click)="handleUpdateStatus('failure')">
+              <mat-icon>close</mat-icon>Mark failed
+            </button>
+            <button mat-menu-item (click)="handleCopyGoal()" matTooltip="Copy Goal to other date/interval">
+              <mat-icon>content_copy</mat-icon> Copy to date
+            </button>
+            <button mat-menu-item (click)="handleDeleteGoal()">
+              <mat-icon>delete</mat-icon> Delete goal
+            </button>
+          </ng-template>
+        </mat-menu>
       </div>
-      <div class="more-button">
-        <button mat-icon-button (click)="handleEditGoal()" matTooltip="Edit Goal">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button (click)="handleCopyGoal()" matTooltip="Copy Goal to other date">
-          <mat-icon>content_copy</mat-icon>
-        </button>
-        <button mat-icon-button (click)="handleDeleteGoal()" matTooltip="Delete Goal">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-subtitle class="subtitle">
-    <b>Created on:</b>
-    {{ goalObj.created_date?.format("DD-MM-YYYY, h:mm:ss a") }}
-    <b>Last Updated on:</b>
-    {{ goalObj.updated_date?.format("DD-MM-YYYY, h:mm:ss a") }}
-  </mat-card-subtitle>
-  <mat-card-content class="dashboard-card-content" *ngIf="isCardBodyVisible">
-    <mat-button-toggle-group [formControl]="goalStatus" class="status-buttons" (change)="handleUpdateStatus()">
-      <mat-button-toggle *ngFor="let st of Statuses" [value]="st.value" [matTooltip]="st.text">
-        <mat-icon>{{ st.icon }}</mat-icon>
-      </mat-button-toggle>
-    </mat-button-toggle-group>
-    <div class="subtitle">
-      <b>Priority:</b> {{ getPriorityText(goalObj.priority) }}
+  </div>
+  <div *ngIf="isCardBodyVisible" class="card-body" fxLayout="column" fxLayoutAlign="space-between stretch"
+    fxLayoutGap="5px">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxflex>
+          <b>Created on:</b> {{ goalObj.created_date?.format("DD-MM-YYYY") }}
+        </div>
+        <div fxflex>
+          <b>Progress:</b> {{ goalObj.actual_val }} / {{ goalObj.target_val }}
+        </div>
     </div>
-    <div class="subtitle">
-      <b>Goal Type:</b> {{ getGoalType(goalObj.goal_type) }}
-    </div>
-    <div *ngIf="goalObj.target_val || 0 > 0" class="subtitle">
-      <b>Progress:</b> {{ goalObj.actual_val }} / {{ goalObj.target_val }}
-    </div>
-    <div class="subtitle"><b>Description:</b></div>
-    <p class="description" [innerHtml]="goalObj.goal_description"></p>
-    <div class="subtitle">
+    <div fxflex><b>Description:</b></div>
+    <div fxflex><p [innerHtml]="goalObj.goal_description"></p></div>
+    <div fxflex>
       <b>Closing Comment:</b> {{ goalObj.close_comment || "N/A" }}
     </div>
-  </mat-card-content>
-</mat-card>
+  </div>
+</div>

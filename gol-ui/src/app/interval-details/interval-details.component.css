@@ -1,5 +1,6 @@
 .grid-container {
   width: 80%;
+  max-width: 800px;
 }
 
 .flex-container {
@@ -35,6 +36,11 @@
   background-color: #7db557;
   margin-left: 5px;
 }
+
+.add-goal {
+  width: 200px;
+}
+
 /* 
 ::ng-deep .mat-datepicker-toggle {
   display: none;

@@ -48,7 +48,6 @@ import { DialogCopyGoalComponent } from './dialog-copy-goal/dialog-copy-goal.com
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatTabsModule } from '@angular/material/tabs';
-import { LtHomeComponent } from './long-term/lt-home/lt-home.component';
 import { LtFormComponent } from './long-term/lt-form/lt-form.component';
 import { LtTabsComponent } from './long-term/lt-tabs/lt-tabs.component';
 import { LtGoalCardComponent } from './long-term/lt-goal-card/lt-goal-card.component';
@@ -65,7 +64,6 @@ import { ObjectkeysPipe } from './common/objectkeys.pipe';
     DialogGoalStatusUpdateComponent,
     DialogEditGoalComponent,
     DialogCopyGoalComponent,
-    LtHomeComponent,
     LtFormComponent,
     LtTabsComponent,
     LtGoalCardComponent,

@@ -1,9 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { LtgHomeTabs } from 'src/app/common/constants';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+
+import { LtgHomeTabs, PriorityIcons, LtgType, GoalPriorities } from 'src/app/common/constants';
 import { LtGoal } from 'src/app/common/LtGoal';
 import { LtgService } from 'src/app/service/ltg.service';
 import { NotifierService } from 'src/app/service/notifier.service';
+import { LtFormComponent } from '../lt-form/lt-form.component';
 
 @Component({
   selector: 'app-lt-goal-card',
@@ -13,14 +15,15 @@ import { NotifierService } from 'src/app/service/notifier.service';
 export class LtGoalCardComponent implements OnInit {
   @Input('goalObj') goalObj!: LtGoal;
   @Input('tab') tab!: string;
+  @Output('goalUpdated') goalUpdated: EventEmitter<void> = new EventEmitter();
   isCardVisible = true;
   isCardBodyVisible = false;
+  Icons = PriorityIcons;
 
   constructor(
     private ltgService: LtgService,
     private notifierService: NotifierService,
-    private router: Router,
-    private route: ActivatedRoute
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {}
@@ -46,9 +49,18 @@ export class LtGoalCardComponent implements OnInit {
 
   handleEdit() {
     this.ltgService.addLtgToEdit(this.goalObj);
-    this.router.navigate(['ltform'], {
-      relativeTo: this.route,
-      queryParams: { action: 'edit', goalId: this.goalObj._id },
+
+    const dialogRef = this.dialog.open(LtFormComponent, {
+      data: { action: 'edit', goalId: this.goalObj._id },
+      width: '65%',
+      height: '65%',
+      maxWidth: '100%',
+    });
+
+    dialogRef.afterClosed().subscribe((value) => {
+      if (value === 'edited') {
+        this.goalUpdated.emit();
+      }
     });
   }
 
@@ -67,5 +79,17 @@ export class LtGoalCardComponent implements OnInit {
 
   toggleCardBodyVisible() {
     this.isCardBodyVisible = !this.isCardBodyVisible;
+  }
+
+  getGoalTypeIcon(val: string) {
+    return LtgType.find((type) => type.value === val)?.icon;
+  }
+
+  getGoalTypeIconColor(val: string) {
+    return LtgType.find((type) => type.value === val)?.icon_class;
+  }
+
+  getPriorityText(val: string) {
+    return GoalPriorities.find((p) => p.value === val)?.text + ' Priority';
   }
 }

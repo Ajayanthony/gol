@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+
 import {
   LtgHomeTabs,
   GoalPriorities,
+  PriorityIcons,
   LtgType,
-  LtgSortFields,
 } from 'src/app/common/constants';
 import { LtGoal } from 'src/app/common/LtGoal';
 import { LtgService } from 'src/app/service/ltg.service';
+import { LtFormComponent } from '../lt-form/lt-form.component';
 
 @Component({
   selector: 'app-lt-tabs',
@@ -14,64 +19,83 @@ import { LtgService } from 'src/app/service/ltg.service';
   styleUrls: ['./lt-tabs.component.css'],
 })
 export class LtTabsComponent implements OnInit {
-  private ltgByPriority: { [key: string]: LtGoal[] } = {
+  displayedLtgs: { [key: string]: LtGoal[] } = {
     [GoalPriorities[0].value]: [],
     [GoalPriorities[1].value]: [],
     [GoalPriorities[2].value]: [],
   };
-  private ltgByType: { [key: string]: LtGoal[] } = {
-    [LtgType[0].value]: [],
-    [LtgType[1].value]: [],
-  };
-  currentLtgs: { [key: string]: LtGoal[] } = {};
+  typeFilter: FormControl = new FormControl({
+    value: 'all',
+    text: 'All Categories',
+  });
+  private fetchedLtgs: Array<LtGoal> = [];
   tabIndex: number = 0;
   ltgHomeTabs = LtgHomeTabs;
-  sortBy: string = LtgSortFields[0];
+  Icons = PriorityIcons;
+  goalTypes = LtgType;
 
-  constructor(private ltgService: LtgService) {
-    ltgService.getSortField$().subscribe((field: string) => {
-      this.sortBy = field;
-      this.handleTabChange(this.tabIndex);
-    });
-  }
+  constructor(
+    private ltgService: LtgService,
+    private router: Router,
+    private route: ActivatedRoute,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    this.handleTabChange(0);
+    this.getGoalsForTab(0);
+
+    this.typeFilter.valueChanges.subscribe((change) =>
+      this.updateDisplayedLtgs()
+    );
   }
 
-  getCurrentLtgs(goalsList: LtGoal[]) {
-    this.clearCurrentLists();
-    goalsList.forEach((ltg) => {
-      this.ltgByPriority[ltg.priority].push(ltg);
-      this.ltgByType[ltg.goal_type].push(ltg);
+  showAddLtgForm() {
+    this.ltgService.addLtgToEdit({} as LtGoal);
+    // this.router.navigate(['ltform'], {
+    //   relativeTo: this.route,
+    //   queryParams: { action: 'add' },
+    // });
+
+    const dialogRef = this.dialog.open(LtFormComponent, {
+      data: { action: 'add' },
+      width: '65%',
+      height: '65%',
+      maxWidth: '100%',
     });
-    this.updateDisplayedList();
+
+    dialogRef.afterClosed().subscribe((value) => {
+      if(value === 'added') {
+        this.getGoalsForTab(0);
+      }
+    });
   }
 
-  handleTabChange(index: number) {
+  getGoalsForTab(index: number) {
     this.tabIndex = index;
     this.ltgService
       .getLtgsForTab(LtgHomeTabs[index].value)
       .subscribe((goalsList) => {
-        this.getCurrentLtgs(goalsList);
+        this.fetchedLtgs = goalsList;
+        this.updateDisplayedLtgs();
       });
+  }
+
+  updateDisplayedLtgs() {
+    this.clearCurrentLists();
+    this.fetchedLtgs.forEach((ltg) => {
+      if (
+        this.typeFilter.value.value === 'all' ||
+        this.typeFilter.value.value === ltg.goal_type
+      ) {
+        this.displayedLtgs[ltg.priority].push(ltg);
+      }
+    });
   }
 
   private clearCurrentLists() {
     //https://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
-    for (let priority in this.ltgByPriority) {
-      this.ltgByPriority[priority].length = 0;
-    }
-    for (let goalType in this.ltgByType) {
-      this.ltgByType[goalType].length = 0;
-    }
-  }
-
-  private updateDisplayedList() {
-    if (this.sortBy === LtgSortFields[0]) {
-      this.currentLtgs = this.ltgByPriority;
-    } else {
-      this.currentLtgs = this.ltgByType;
+    for (let priority in this.displayedLtgs) {
+      this.displayedLtgs[priority].length = 0;
     }
   }
 }

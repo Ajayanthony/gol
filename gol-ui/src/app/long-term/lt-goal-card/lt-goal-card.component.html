@@ -1,89 +1,79 @@
 <div class="my-card mat-elevation-z2" *ngIf="isCardVisible">
-    <div class="card-header mat-elevation-z2">
-        <div class="card-title">{{ goalObj.goal_title|titlecase }}</div>
-        <mat-chip-list>
-            <mat-basic-chip class="custom-chip" selected>
-                {{ goalObj.goal_type|titlecase }} Goal
-            </mat-basic-chip>
-            <mat-basic-chip class="custom-chip" selected>
-                {{ goalObj.priority|titlecase }} Priority
-            </mat-basic-chip>
-            <mat-basic-chip class="custom-chip" selected>
-                Target Date: {{ goalObj.target_date?.format("DD-MM-YYYY") }}
-            </mat-basic-chip>
-            <mat-basic-chip class="custom-chip" selected>
-                Progress: {{ goalObj.completed_parts }}/{{ goalObj.total_parts }}
-            </mat-basic-chip>
-        </mat-chip-list>
+    <div class="card-header">
+        <div class="card-title" (click)="toggleCardBodyVisible()">
+            <img class="custom-icon" [src]="Icons.get(goalObj.priority)" [alt]="goalObj.priority"
+                [matTooltip]="getPriorityText(goalObj.priority)">
+            <mat-icon [class]="getGoalTypeIconColor(goalObj.goal_type)">
+                {{ getGoalTypeIcon(goalObj.goal_type) }}
+            </mat-icon>
+            {{ goalObj.goal_title|titlecase }}
+        </div>
+        <div class="more-button">
+            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Edit Goal">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <ng-template matMenuContent>
+                    <button color="primary" (click)="handleEdit()" mat-menu-item matTooltip="Edit Form will open">
+                        <mat-icon>edit</mat-icon> Edit goal
+                    </button>
+                    <button *ngIf="isCurrentLtgTab()" (click)="handleStatusChange('successful')" color="primary" mat-menu-item
+                        matTooltip="Mark Complete">
+                        <mat-icon>done</mat-icon> Mark Completed
+                    </button>
+                    <button *ngIf="isCurrentLtgTab()" (click)="handleStatusChange('failed')" color="primary" mat-menu-item
+                        matTooltip="Mark Failed">
+                        <mat-icon>close</mat-icon> Mark Failed
+                    </button>
+                    <button *ngIf="isCurrentLtgTab()" (click)="handleStatusChange('archived')" color="primary" mat-menu-item
+                        matTooltip="To put on hold/archive">
+                        <mat-icon>archive</mat-icon> Archive goal
+                    </button>
+                    <button *ngIf="tab && !isCurrentLtgTab()" (click)="handleStatusChange('current')" color="primary"
+                        mat-menu-item matTooltip="Move to Current">
+                        <mat-icon>assignment</mat-icon> Move to current
+                    </button>
+                    <button *ngIf="isCurrentLtgTab()" color="primary" (click)="handleDelete()" mat-menu-item
+                        matTooltip="Delete goal">
+                        <mat-icon>delete</mat-icon> Delete goal
+                    </button>
+                </ng-template>
+            </mat-menu>
+        </div>
     </div>
 
-    <div class="card-body" fxLayout="column" fxLayoutAlign="space-between stretch" fxLayoutGap="5px">
-        <div class="card-body-title" (click)="toggleCardBodyVisible()">
-            <b>Details</b>
-            <button mat-icon-button (click)="toggleCardBodyVisible()" *ngIf="!isCardBodyVisible">
-                <mat-icon>expand_more</mat-icon>
-            </button>
-            <button mat-icon-button (click)="toggleCardBodyVisible()" *ngIf="isCardBodyVisible">
-                <mat-icon>expand_less</mat-icon>
-            </button>
-        </div>
-        <div *ngIf="isCardBodyVisible">
-            <div fxflex class="detail-div mat-elevation-z3">
+    <div *ngIf="isCardBodyVisible" class="card-body" fxLayout="column" fxLayoutAlign="space-between stretch"
+        fxLayoutGap="5px">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div fxflex>
+                    <b>Created on:</b> {{ goalObj.created_date?.format("DD-MM-YYYY") }}
+                </div>
+                <div fxflex>
+                    <b>Target Date:</b> {{ goalObj.target_date?.format("DD-MM-YYYY") }}
+                </div>
+                <div fxflex>
+                    <b>Progress:</b> {{ goalObj.completed_parts }}/{{ goalObj.total_parts }}
+                </div>
+            </div>
+            <p></p>
+            <div fxflex>
                 <b>Description:</b>
-                <p [innerHtml]="goalObj.description"></p>
+                <p [innerHtml]="goalObj.description || 'N/A'"></p>
             </div>
-            <div fxflex class="detail-div mat-elevation-z3">
+            <div fxflex>
                 <b>Expected Outcome:</b>
-                <p [innerHtml]="goalObj.outcome"></p>
+                <p [innerHtml]="goalObj.outcome || 'N/A'"></p>
             </div>
-            <div fxflex class="detail-div mat-elevation-z3">
+            <div fxflex>
                 <b>Obstacles:</b>
-                <p [innerHtml]="goalObj.obstacles"></p>
+                <p [innerHtml]="goalObj.obstacles || 'N/A'"></p>
             </div>
-            <div fxflex class="detail-div mat-elevation-z3">
+            <div fxflex>
                 <b>Plan:</b>
-                <p [innerHtml]="goalObj.plan"></p>
+                <p [innerHtml]="goalObj.plan || 'N/A'"></p>
             </div>
-            <div fxflex class="detail-div mat-elevation-z3">
-                <p><b>Closing Comments:</b> {{ goalObj.closing_comment }}</p>
+            <div fxflex>
+                <p><b>Closing Comments:</b> {{ goalObj.closing_comment || "N/A" }}</p>
             </div>
-        </div>
-    </div>
-
-    <div class="card-footer mat-elevation-z1">
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-            <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
-                <div fxflex><b>Created Date:</b> {{ goalObj.created_date?.format("DD-MM-YYYY h:mm:ss a") }}</div>
-                <div fxflex><b>Updated Date:</b> {{ goalObj.updated_date?.format("DD-MM-YYYY h:mm:ss a") }}</div>
-            </div>
-
-            <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px" fxLayout.xs="column"
-                fxLayoutAlign.xs="start start">
-                <button *ngIf="isCurrentLtgTab()" (click)="handleStatusChange('successful')" color="primary"
-                    mat-raised-button matTooltip="Mark Complete">
-                    <mat-icon>done</mat-icon> Completed
-                </button>
-                <button *ngIf="isCurrentLtgTab()" (click)="handleStatusChange('failed')" color="primary"
-                    mat-raised-button matTooltip="Mark Failed">
-                    <mat-icon>close</mat-icon> Mark Failed
-                </button>
-                <button *ngIf="isCurrentLtgTab()" (click)="handleStatusChange('archived')" color="primary"
-                    mat-raised-button matTooltip="Mark Failed">
-                    <mat-icon>archive</mat-icon> Archive
-                </button>
-                <button *ngIf="tab && !isCurrentLtgTab()" (click)="handleStatusChange('current')" color="primary"
-                    mat-raised-button matTooltip="Move to Current">
-                    <mat-icon>assignment</mat-icon> Current
-                </button>
-
-                <button color="primary" (click)="handleEdit()" mat-raised-button matTooltip="Edit Form will open">
-                    <mat-icon>edit</mat-icon> Edit
-                </button>
-                <button *ngIf="isCurrentLtgTab()" color="primary" (click)="handleDelete()" mat-raised-button
-                    matTooltip="Delete goal">
-                    <mat-icon>delete</mat-icon> Delete
-                </button>
-            </div>
-        </div>
     </div>
 </div>

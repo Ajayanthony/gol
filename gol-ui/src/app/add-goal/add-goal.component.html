@@ -11,17 +11,17 @@
         </mat-error>
       </mat-form-field>
     </div>
-    
+
   </div>
   <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px" fxLayout.xs="column" class="flex-container">
     <div fxFill>
       <!-- <mat-form-field class="full-width"> -->
-        <ckeditor [editor]="ckEditor" formControlName="goalDescription"></ckeditor>
-        <!-- <textarea matInput placeholder="Goal Description" formControlName="goalDescription"></textarea> -->
+      <ckeditor [editor]="ckEditor" formControlName="goalDescription"></ckeditor>
+      <!-- <textarea matInput placeholder="Goal Description" formControlName="goalDescription"></textarea> -->
       <!-- </mat-form-field> -->
     </div>
   </div>
-  <div fxLayout="row" fxLayoutAlign="space-between  none" fxLayoutGap="8px" fxLayout.xs="column" class="flex-container">
+  <div fxLayout="row" fxLayoutAlign="none" fxLayoutGap="8px" fxLayout.xs="column" class="flex-container">
     <div fxflex>
       <mat-form-field [class]="formFieldClass">
         <mat-select placeholder="Interval" [formControl]="interval">
@@ -43,6 +43,8 @@
         <input matInput type="number" placeholder="Target Value" formControlName="targetValue" />
       </mat-form-field>
     </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="none" fxLayoutGap="8px" fxLayout.xs="column" class="flex-container">
     <div fxflex>
       <mat-form-field [class]="formFieldClass">
         <mat-select placeholder="Priority" formControlName="goalPriority">

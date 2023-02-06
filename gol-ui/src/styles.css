@@ -5,3 +5,33 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.custom-icon {
+    height: 20px;
+    width: 20px;
+}
+
+.professional {
+    color: rgb(21, 172, 188);
+    font-size: 17px;
+}
+
+.health {
+    color: rgb(221, 35, 35);
+    font-size: 17px
+}
+
+.self-improvement {
+    color: rgb(234, 147, 25);
+    font-size: 17px
+}
+
+.personal {
+    color: rgb(96, 25, 177);
+    font-size: 17px
+}
+
+.financial {
+    color: rgb(34, 18, 73);
+    font-size: 17px
+}

@@ -1,62 +1,18 @@
-.mat-card {
-  padding: 10px;
-}
-
-:host ::ng-deep .mat-card-header-text {
-  margin-left: 5px;
-}
-
-.mat-card-header .mat-card-title {
-  margin-bottom: 0px;
-}
-
 .more-button {
   position: absolute;
   top: 5px;
   right: 10px;
 }
 
-.status-buttons {
-  float: right;
-  margin-right: 20px;
-}
-
-.goal-title {
-  margin-right: 90px;
-  font-size: smaller;
-}
-
-.subtitle {
-  margin-left: 5px;
-}
-
-.description {
-  display: inline-block;
-  margin: 5px;
-  white-space: pre-line;
-}
-
-.goal-card {
-  font-family: 'Lora', serif;
-}
-
-.in-progress {
-  border: solid 2px #7b86c7;
-}
-
-.in-progress .goal-title {
-  color:#3030cd;
+.in-progress .card-title {
+  color:#4b4be4;
 }
 
 .in-progress .mat-icon-button {
   color: #7b86c7;
 }
 
-.success {
-  border: solid 2px lightgreen;
-}
-
-.success .goal-title {
+.success .card-title {
   color:darkgreen;
 }
 
@@ -64,14 +20,37 @@
   color:lightgreen;
 }
 
-.failure {
-  border: solid 2px #f2a99c;
-}
-
-.failure .goal-title {
+.failure .card-title {
   color: indianred;
 }
 
 .failure .mat-icon-button {
   color: #f2a99c;
+}
+
+
+.my-card {
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+}
+
+.card-header {
+  padding: 15px;
+  background-color: white;
+  border-radius: inherit;
+}
+
+.card-title {
+  font-family: "Poppins", sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.card-body {
+  padding: 15px;
+  border-radius: 0 0 5px 5px;
+  font-size: xx-small;
+  color: #6a6868;
 }

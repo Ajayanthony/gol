@@ -19,3 +19,13 @@
 .width-100-pc {
   width: 100%;
 }
+
+.grid-container {
+  width: 80%;
+  max-width: 800px;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: center;
+}

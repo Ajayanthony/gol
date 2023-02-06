@@ -2,9 +2,17 @@
     position: relative;
     margin-top: 10px;
     height: auto;
+    max-width: 800px;
 }
 
-.divider {
+.success {
     margin: 10px 20px;
-    color: #878484;
+    color: #548461;
+    font-size: medium;
+}
+
+.failed {
+    margin: 10px 20px;
+    color: #ec8282;
+    font-size: medium;
 }
