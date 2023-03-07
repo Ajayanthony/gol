@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import * as moment from 'moment';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,16 +17,21 @@ import { createSummaryText } from '../common/utils';
   selector: 'app-interval-details',
   templateUrl: './interval-details.component.html',
   styleUrls: ['./interval-details.component.css'],
+  providers: [IntervalService],
 })
-export class IntervalDetailsComponent implements OnInit {
+export class IntervalDetailsComponent implements OnInit, OnDestroy {
   goalsList$: Observable<IGoal[]> = new Observable();
-  interval: string = 'weekly';
+  @Input('interval') interval: string = 'weekly';
   startDate = new FormControl();
-  typeFilter: FormControl = new FormControl({value:'all', text:'All Categories'});
+  typeFilter: FormControl = new FormControl({
+    value: 'all',
+    text: 'All Categories',
+  });
   isHandset$: Observable<boolean>;
   summaryTitle = '';
   intervalDatesText = '';
   goalTypes = GoalTypes;
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private route: ActivatedRoute,
@@ -34,22 +39,25 @@ export class IntervalDetailsComponent implements OnInit {
     public dialog: MatDialog,
     private breakPoint: BreakpointService
   ) {
-    this.isHandset$ = breakPoint.getIsHandset$();
+    this.isHandset$ = breakPoint.getIsHandset$().pipe(takeUntil(this.destroy$));
   }
 
   ngOnInit() {
-    this.route.fragment
-      .pipe(map((fragment) => fragment || 'weekly'))
-      .subscribe((value) => {
-        this.startDate.setValue(moment());
-        this.interval = value;
-        this.handleDateChange();
-      });
-    this.route.queryParams.subscribe((params) => {
-      if (!!params.action && params.action === 'add') this.showAddGoalForm();
+    this.route.fragment.pipe(takeUntil(this.destroy$)).subscribe((value) => {
+      this.startDate.setValue(moment());
+      if (value) this.interval = value;
+      this.handleDateChange();
     });
 
-    this.goalsList$ = this.intervalService.getGoalsList$();
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        if (!!params.action && params.action === 'add') this.showAddGoalForm();
+      });
+
+    this.goalsList$ = this.intervalService
+      .getGoalsList$()
+      .pipe(takeUntil(this.destroy$));
   }
 
   handleDateChange() {
@@ -72,10 +80,13 @@ export class IntervalDetailsComponent implements OnInit {
       maxWidth: '100%',
     });
 
-    dialogRef.afterClosed().subscribe((value) => {
-      console.log(value);
-      this.handleGoalAdded();
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
+        console.log(value);
+        this.handleGoalAdded();
+      });
   }
 
   nextDateButtonClickHandler(val: number) {
@@ -90,5 +101,10 @@ export class IntervalDetailsComponent implements OnInit {
 
     this.startDate.setValue(tempDate);
     this.handleDateChange();
+  }
+
+  async ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

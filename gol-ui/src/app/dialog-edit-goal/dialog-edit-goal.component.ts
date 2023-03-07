@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { tap, takeUntil } from 'rxjs/operators';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import * as constants from '../common/constants';
@@ -16,7 +16,7 @@ let timeoutId: number;
   templateUrl: './dialog-edit-goal.component.html',
   styleUrls: ['./dialog-edit-goal.component.css'],
 })
-export class DialogEditGoalComponent implements OnInit, AfterViewInit {
+export class DialogEditGoalComponent implements OnInit, AfterViewInit, OnDestroy {
   goalPriorities = constants.GoalPriorities;
   goalTypes = constants.GoalTypes;
   Statuses = constants.GoalStatuses;
@@ -25,6 +25,7 @@ export class DialogEditGoalComponent implements OnInit, AfterViewInit {
   newData: any = {};
   autoSavedText: string = '';
   ckEditor = ClassicEditor;
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   goalForm = this.fb.group({
     goalTitle: [null, Validators.required],
@@ -59,11 +60,14 @@ export class DialogEditGoalComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.goalStatus.valueChanges.subscribe((val) => {
-      if (val !== 'in_progress')
-        this.goalForm.controls['closeComment'].enable({ emitEvent: false });
-      else this.goalForm.controls['closeComment'].disable({ emitEvent: false });
-    });
+    this.goalStatus.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((val) => {
+        if (val !== 'in_progress')
+          this.goalForm.controls['closeComment'].enable({ emitEvent: false });
+        else
+          this.goalForm.controls['closeComment'].disable({ emitEvent: false });
+      });
 
     this.prevGoal = this.data.goal;
 
@@ -79,19 +83,22 @@ export class DialogEditGoalComponent implements OnInit, AfterViewInit {
 
     this.goalStatus.setValue(this.prevGoal.status);
 
-    this.goalForm.valueChanges.subscribe(() => {
+    this.goalForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.onFormFieldChange();
     });
   }
 
   ngAfterViewInit(): void {
-    this.breakPoint.getIsHandset$().subscribe((isHandset) => {
-      if (isHandset) {
-        this.dialogRef.updateSize('100%', '100%');
-      } else {
-        this.dialogRef.updateSize('90%', '90%');
-      }
-    });
+    this.breakPoint
+      .getIsHandset$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isHandset) => {
+        if (isHandset) {
+          this.dialogRef.updateSize('100%', '100%');
+        } else {
+          this.dialogRef.updateSize('90%', '90%');
+        }
+      });
   }
 
   onSubmit() {
@@ -151,5 +158,10 @@ export class DialogEditGoalComponent implements OnInit, AfterViewInit {
     ) {
       this.newData.close_comment = this.goalForm.get('closeComment')?.value;
     }
+  }
+
+  async ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { filter, map, switchMap, tap, takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 
 import { DialogCopyGoalComponent } from '../dialog-copy-goal/dialog-copy-goal.component';
 import { NotifierService } from '../service/notifier.service';
@@ -24,15 +24,14 @@ import { DialogEditGoalComponent } from '../dialog-edit-goal/dialog-edit-goal.co
   templateUrl: './goal-card.component.html',
   styleUrls: ['./goal-card.component.css'],
 })
-export class GoalCardComponent implements OnInit {
+export class GoalCardComponent implements OnInit, OnDestroy {
   @Input('goalRef') goalObj!: IGoal;
   @Output('goalUpdated') goalUpdated: EventEmitter<void> = new EventEmitter();
-
   Statuses = GoalStatuses;
   Icons = PriorityIcons;
   isCardBodyVisible: boolean = false;
-
   goalStatus: FormControl = new FormControl();
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     public dialog: MatDialog,
@@ -71,7 +70,8 @@ export class GoalCardComponent implements OnInit {
           this.goalService
             .updateGoalStatus(this.goalObj.id!, result)
             .pipe(map((response) => [response, result]))
-        )
+        ),
+        takeUntil(this.destroy$)
       )
       .subscribe((combineRes) => {
         this.goalObj = Object.assign(this.goalObj, combineRes[1]);
@@ -111,7 +111,8 @@ export class GoalCardComponent implements OnInit {
           this.goalService
             .editGoal(this.goalObj.id!, newData)
             .pipe(map((response) => [response, newData]))
-        )
+        ),
+        takeUntil(this.destroy$)
       )
       .subscribe((combineRes: Array<any>) => {
         if (combineRes[0]?.result > 0) {
@@ -170,23 +171,32 @@ export class GoalCardComponent implements OnInit {
       maxWidth: '100%',
     });
 
-    dialogRef.afterClosed().subscribe((response) => {
-      if (!!response)
-        this.notifierService.notify(
-          response.length + ' Goal(s) Created Successfully.'
-        );
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response) => {
+        if (!!response)
+          this.notifierService.notify(
+            response.length + ' Goal(s) Created Successfully.'
+          );
+      });
   }
 
   handleDeleteGoal() {
     if (window.confirm('Confirm Delete')) {
       this.intervalService
         .deleteGoal(this.goalObj.id!)
+        .pipe(takeUntil(this.destroy$))
         .subscribe((response: any) => {
           if (response.result > 0) {
             this.notifierService.notify('Goal Deleted');
           }
         });
     }
+  }
+
+  async ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

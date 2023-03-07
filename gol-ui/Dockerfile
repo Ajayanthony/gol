@@ -1,5 +1,5 @@
 ### STAGE 1: Build ###
-FROM node:14.18.1 AS build
+FROM node:14 AS build
 WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 RUN npm install

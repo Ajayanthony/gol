@@ -1,5 +1,7 @@
-import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { LtgHomeTabs, PriorityIcons, LtgType, GoalPriorities } from 'src/app/common/constants';
 import { LtGoal } from 'src/app/common/LtGoal';
@@ -12,13 +14,14 @@ import { LtFormComponent } from '../lt-form/lt-form.component';
   templateUrl: './lt-goal-card.component.html',
   styleUrls: ['./lt-goal-card.component.css'],
 })
-export class LtGoalCardComponent implements OnInit {
+export class LtGoalCardComponent implements OnInit, OnDestroy {
   @Input('goalObj') goalObj!: LtGoal;
   @Input('tab') tab!: string;
   @Output('goalUpdated') goalUpdated: EventEmitter<void> = new EventEmitter();
   isCardVisible = true;
   isCardBodyVisible = false;
   Icons = PriorityIcons;
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private ltgService: LtgService,
@@ -36,6 +39,7 @@ export class LtGoalCardComponent implements OnInit {
     if (this.goalObj?._id && this.tab !== newStatus) {
       this.ltgService
         .updateLtgStatus(this.goalObj._id, this.tab, newStatus)
+        .pipe(takeUntil(this.destroy$))
         .subscribe((response: any) => {
           if (response.updatedCount > 0) {
             this.notifierService.notify('Lt Goal status updated.');
@@ -57,23 +61,29 @@ export class LtGoalCardComponent implements OnInit {
       maxWidth: '100%',
     });
 
-    dialogRef.afterClosed().subscribe((value) => {
-      if (value === 'edited') {
-        this.goalUpdated.emit();
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
+        if (value === 'edited') {
+          this.goalUpdated.emit();
+        }
+      });
   }
 
   handleDelete() {
     if (this.goalObj?._id) {
-      this.ltgService.deleteLtg(this.goalObj._id).subscribe((response: any) => {
-        if (response.result > 0) {
-          this.notifierService.notify('Lt Goal Deleted.');
-          this.isCardVisible = false;
-        } else {
-          this.notifierService.notify('Could not delete Lt Goal.');
-        }
-      });
+      this.ltgService
+        .deleteLtg(this.goalObj._id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((response: any) => {
+          if (response.result > 0) {
+            this.notifierService.notify('Lt Goal Deleted.');
+            this.isCardVisible = false;
+          } else {
+            this.notifierService.notify('Could not delete Lt Goal.');
+          }
+        });
     }
   }
 
@@ -91,5 +101,10 @@ export class LtGoalCardComponent implements OnInit {
 
   getPriorityText(val: string) {
     return GoalPriorities.find((p) => p.value === val)?.text + ' Priority';
+  }
+
+  async ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

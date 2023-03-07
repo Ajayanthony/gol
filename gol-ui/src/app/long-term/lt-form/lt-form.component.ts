@@ -1,9 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import * as moment from 'moment';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import {
   GoalPriorities,
@@ -25,7 +27,7 @@ export enum FormType {
   templateUrl: './lt-form.component.html',
   styleUrls: ['./lt-form.component.css'],
 })
-export class LtFormComponent implements OnInit {
+export class LtFormComponent implements OnInit, OnDestroy {
   baseLtg: LtGoal = {} as LtGoal;
   formType!: FormType;
   goalId: string | null = null;
@@ -35,6 +37,7 @@ export class LtFormComponent implements OnInit {
   goalPriorities = GoalPriorities;
   ltgTypes = LtgType;
   formFieldClass = 'width150';
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private route: ActivatedRoute,
@@ -73,15 +76,18 @@ export class LtFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.breakPoint.getIsHandset$().subscribe((isHandset) => {
-      if (isHandset) {
-        this.dialogRef.updateSize('90%', '90%');
-        this.formFieldClass = 'full-width';
-      } else {
-        this.dialogRef.updateSize('65%', '65%');
-        this.formFieldClass = 'width150';
-      }
-    });
+    this.breakPoint
+      .getIsHandset$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isHandset) => {
+        if (isHandset) {
+          this.dialogRef.updateSize('90%', '90%');
+          this.formFieldClass = 'full-width';
+        } else {
+          this.dialogRef.updateSize('65%', '65%');
+          this.formFieldClass = 'width150';
+        }
+      });
   }
 
   isFormTypeEdit() {
@@ -108,15 +114,18 @@ export class LtFormComponent implements OnInit {
   handleAddGoal() {
     const changeObj = this.createChangedFieldsObj();
 
-    this.ltgService.addLtg(changeObj).subscribe((response: any) => {
-      if (response.goalId) {
-        this.notifierService.notify('Lt Goal created successfully.');
-        this.closeDialog('added');
-      } else {
-        this.notifierService.notify('Lt Goal add request did not succeed.');
-        this.closeDialog('failure');
-      }
-    });
+    this.ltgService
+      .addLtg(changeObj)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: any) => {
+        if (response.goalId) {
+          this.notifierService.notify('Lt Goal created successfully.');
+          this.closeDialog('added');
+        } else {
+          this.notifierService.notify('Lt Goal add request did not succeed.');
+          this.closeDialog('failure');
+        }
+      });
   }
 
   handleEditGoal() {
@@ -129,6 +138,7 @@ export class LtFormComponent implements OnInit {
       this.baseLtg?.updated_date.format(ltgDateFormat);
     this.ltgService
       .editLtg(this.goalId!, changeObj)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((response: any) => {
         if (response.result > 0) {
           this.notifierService.notify('Lt Goal edit was successful.');
@@ -226,5 +236,10 @@ export class LtFormComponent implements OnInit {
       completedParts: this.baseLtg?.completed_parts ?? 0,
       closingComment: this.baseLtg?.closing_comment ?? '',
     });
+  }
+
+  async ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

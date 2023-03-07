@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import {
   LtgHomeTabs,
@@ -18,7 +20,7 @@ import { LtFormComponent } from '../lt-form/lt-form.component';
   templateUrl: './lt-tabs.component.html',
   styleUrls: ['./lt-tabs.component.css'],
 })
-export class LtTabsComponent implements OnInit {
+export class LtTabsComponent implements OnInit, OnDestroy {
   displayedLtgs: { [key: string]: LtGoal[] } = {
     [GoalPriorities[0].value]: [],
     [GoalPriorities[1].value]: [],
@@ -33,6 +35,7 @@ export class LtTabsComponent implements OnInit {
   ltgHomeTabs = LtgHomeTabs;
   Icons = PriorityIcons;
   goalTypes = LtgType;
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private ltgService: LtgService,
@@ -44,9 +47,9 @@ export class LtTabsComponent implements OnInit {
   ngOnInit(): void {
     this.getGoalsForTab(0);
 
-    this.typeFilter.valueChanges.subscribe((change) =>
-      this.updateDisplayedLtgs()
-    );
+    this.typeFilter.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((change) => this.updateDisplayedLtgs());
   }
 
   showAddLtgForm() {
@@ -63,17 +66,21 @@ export class LtTabsComponent implements OnInit {
       maxWidth: '100%',
     });
 
-    dialogRef.afterClosed().subscribe((value) => {
-      if(value === 'added') {
-        this.getGoalsForTab(0);
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
+        if (value === 'added') {
+          this.getGoalsForTab(0);
+        }
+      });
   }
 
   getGoalsForTab(index: number) {
     this.tabIndex = index;
     this.ltgService
       .getLtgsForTab(LtgHomeTabs[index].value)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((goalsList) => {
         this.fetchedLtgs = goalsList;
         this.updateDisplayedLtgs();
@@ -97,5 +104,10 @@ export class LtTabsComponent implements OnInit {
     for (let priority in this.displayedLtgs) {
       this.displayedLtgs[priority].length = 0;
     }
+  }
+
+  async ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

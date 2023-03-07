@@ -52,6 +52,7 @@ import { LtFormComponent } from './long-term/lt-form/lt-form.component';
 import { LtTabsComponent } from './long-term/lt-tabs/lt-tabs.component';
 import { LtGoalCardComponent } from './long-term/lt-goal-card/lt-goal-card.component';
 import { ObjectkeysPipe } from './common/objectkeys.pipe';
+import { CombinedListComponent } from './combined-list/combined-list.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { ObjectkeysPipe } from './common/objectkeys.pipe';
     LtTabsComponent,
     LtGoalCardComponent,
     ObjectkeysPipe,
+    CombinedListComponent,
   ],
   imports: [
     BrowserModule,

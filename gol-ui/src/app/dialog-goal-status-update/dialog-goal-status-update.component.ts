@@ -1,5 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+
 import { GoalStatuses } from '../common/constants';
 import { getStatusText } from '../common/utils';
 
@@ -8,9 +10,11 @@ import { getStatusText } from '../common/utils';
   templateUrl: './dialog-goal-status-update.component.html',
   styleUrls: ['./dialog-goal-status-update.component.css'],
 })
-export class DialogGoalStatusUpdateComponent implements OnInit {
+export class DialogGoalStatusUpdateComponent implements OnInit, OnDestroy {
   Statuses = GoalStatuses;
   status: string;
+  destroy$: Subject<boolean> = new Subject<boolean>();
+  
   constructor(
     public dialogRef: MatDialogRef<DialogGoalStatusUpdateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -19,4 +23,9 @@ export class DialogGoalStatusUpdateComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  async ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
+  }
 }

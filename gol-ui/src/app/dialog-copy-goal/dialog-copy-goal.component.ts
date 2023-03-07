@@ -1,8 +1,11 @@
-import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as moment from 'moment';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { Intervals } from '../common/constants';
 import { IGoal } from '../common/Goal';
 import { DialogEditGoalComponent } from '../dialog-edit-goal/dialog-edit-goal.component';
@@ -14,7 +17,7 @@ import { IntervalService } from '../service/interval.service';
   templateUrl: './dialog-copy-goal.component.html',
   styleUrls: ['./dialog-copy-goal.component.css'],
 })
-export class DialogCopyGoalComponent implements OnInit, AfterViewInit {
+export class DialogCopyGoalComponent implements OnInit, AfterViewInit, OnDestroy {
   copyForm = this.fb.group({
     interval: [null, Validators.required],
     startDate: null,
@@ -22,6 +25,7 @@ export class DialogCopyGoalComponent implements OnInit, AfterViewInit {
   });
   intervals = Intervals;
   isRepeated: FormControl = new FormControl();
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     public dialogRef: MatDialogRef<DialogEditGoalComponent>,
@@ -46,13 +50,16 @@ export class DialogCopyGoalComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.breakPoint.getIsHandset$().subscribe((isHandset) => {
-      if (isHandset) {
-        this.dialogRef.updateSize('100%', '100%');
-      } else {
-        this.dialogRef.updateSize('300px');
-      }
-    });
+    this.breakPoint
+      .getIsHandset$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isHandset) => {
+        if (isHandset) {
+          this.dialogRef.updateSize('100%', '100%');
+        } else {
+          this.dialogRef.updateSize('300px');
+        }
+      });
   }
 
   onSubmit(): void {
@@ -65,6 +72,7 @@ export class DialogCopyGoalComponent implements OnInit, AfterViewInit {
         this.isRepeated.value ? this.copyForm.controls['repeatCount'].value : 0,
         this.data.goal
       )
+      .pipe(takeUntil(this.destroy$))
       .subscribe((response) => {
         this.dialogRef.close(response);
       });
@@ -87,5 +95,10 @@ export class DialogCopyGoalComponent implements OnInit, AfterViewInit {
         this.copyForm.controls['repeatCount'].enable({ emitEvent: false });
       }
     }
+  }
+
+  async ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

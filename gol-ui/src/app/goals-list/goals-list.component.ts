@@ -1,13 +1,14 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { GoalPriorities } from '../common/constants';
 import { IGoal } from '../common/Goal';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-goals-list',
   templateUrl: './goals-list.component.html',
   styleUrls: ['./goals-list.component.css'],
 })
-export class GoalsListComponent implements OnChanges {
+export class GoalsListComponent implements OnChanges, OnDestroy {
   @Input('typeFilter') typeFilter: string | null = '';
   @Input('goalsList') rawList: IGoal[] | null = null;
 
@@ -15,6 +16,7 @@ export class GoalsListComponent implements OnChanges {
   order = GoalPriorities;
   successGoals: Array<IGoal> = [];
   failureGoals: Array<IGoal> = [];
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor() {}
 
@@ -45,5 +47,10 @@ export class GoalsListComponent implements OnChanges {
         this.failureGoals.push(goal);
       }
     }
+  }
+
+  async ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

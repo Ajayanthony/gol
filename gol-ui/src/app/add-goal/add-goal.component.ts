@@ -1,8 +1,10 @@
-import { AfterViewInit, Component, Inject } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import {
   Intervals,
@@ -20,8 +22,9 @@ import { createSummaryText } from '../common/utils';
   selector: 'app-add-goal',
   templateUrl: './add-goal.component.html',
   styleUrls: ['./add-goal.component.css'],
+  providers: [IntervalService],
 })
-export class AddGoalComponent implements AfterViewInit {
+export class AddGoalComponent implements AfterViewInit, OnDestroy {
   intervals = Intervals;
   goalPriorities = GoalPriorities;
   goalTypes = GoalTypes;
@@ -38,6 +41,7 @@ export class AddGoalComponent implements AfterViewInit {
   ckEditor = ClassicEditor;
   summaryTitle = '';
   intervalDatesText = '';
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private fb: FormBuilder,
@@ -53,19 +57,25 @@ export class AddGoalComponent implements AfterViewInit {
       data.interval,
       moment(data.startDate)
     );
-    this.summaryTitle = this.summaryTitle.substring(0, this.summaryTitle.length - 1);
+    this.summaryTitle = this.summaryTitle.substring(
+      0,
+      this.summaryTitle.length - 1
+    );
   }
 
   ngAfterViewInit(): void {
-    this.breakPoint.getIsHandset$().subscribe((isHandset) => {
-      if (isHandset) {
-        this.dialogRef.updateSize('100%', '100%');
-        this.formFieldClass = 'full-width';
-      } else {
-        this.dialogRef.updateSize('65%', '65%');
-        this.formFieldClass = 'width100';
-      }
-    });
+    this.breakPoint
+      .getIsHandset$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isHandset) => {
+        if (isHandset) {
+          this.dialogRef.updateSize('100%', '100%');
+          this.formFieldClass = 'full-width';
+        } else {
+          this.dialogRef.updateSize('65%', '65%');
+          this.formFieldClass = 'width100';
+        }
+      });
   }
 
   onSubmit(): void {
@@ -82,9 +92,15 @@ export class AddGoalComponent implements AfterViewInit {
 
     this.intervalService
       .addIntervalGoal(this.interval.value, this.startDate.value, formData)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((response) => {
         this.notifierService.notify('Goal Added Successfully.');
         this.dialogRef.close(response);
       });
+  }
+
+  async ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }
