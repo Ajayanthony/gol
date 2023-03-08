@@ -17,39 +17,7 @@
             <ckeditor [editor]="ckEditor" formControlName="description"></ckeditor>
         </div>
         <div fxflex>
-            <h3>Expected Outcome:</h3>
-            <ckeditor [editor]="ckEditor" formControlName="outcome"></ckeditor>
-        </div>
-        <div fxflex>
-            <h3>Obstacles:</h3>
-            <ckeditor [editor]="ckEditor" formControlName="obstacles"></ckeditor>
-        </div>
-        <div fxflex>
-            <h3>Plan:</h3>
-            <ckeditor [editor]="ckEditor" formControlName="plan"></ckeditor>
-        </div>
-        <div fxflex>
-            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="30px" fxLayout.xs="column"
-                class="flex-container">
-                <div fxflex>
-                    <mat-form-field class="width150">
-                        <input matInput placeholder="Target Date" [matDatepicker]="picker" formControlName="targetDate">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-                </div>
-                <div fxflex>
-                    <mat-form-field class="width150">
-                        <input matInput type="number" placeholder="Total Parts" formControlName="totalParts" />
-                    </mat-form-field>
-                </div>
-                <div fxflex *ngIf="isFormTypeEdit()">
-                    <mat-form-field class="width150">
-                        <input matInput type="number" placeholder="Completed Parts" formControlName="completedParts" />
-                    </mat-form-field>
-                </div>
-            </div>
-            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="30px" fxLayout.xs="column"
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px" fxLayout.xs="column"
                 class="flex-container">
                 <div fxflex>
                     <mat-form-field class="width150">
@@ -73,6 +41,23 @@
                         <mat-error *ngIf="ltgForm.controls['goalType'].hasError('required')">
                             Category is <strong>required</strong>
                         </mat-error>
+                    </mat-form-field>
+                </div>
+                <div fxflex>
+                    <mat-form-field class="width150">
+                        <input matInput placeholder="Target Date" [matDatepicker]="picker" formControlName="targetDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div fxflex>
+                    <mat-form-field class="width50">
+                        <input matInput type="number" placeholder="Target" formControlName="totalParts" />
+                    </mat-form-field>
+                </div>
+                <div fxflex *ngIf="isFormTypeEdit()">
+                    <mat-form-field class="width50">
+                        <input matInput type="number" placeholder="Completed" formControlName="completedParts" />
                     </mat-form-field>
                 </div>
             </div>

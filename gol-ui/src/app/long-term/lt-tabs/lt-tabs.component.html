@@ -1,46 +1,51 @@
+<p></p>
 <div class="flex-container">
     <div class="grid-container">
-        <mat-tab-group dynamicHeight (selectedTabChange)="getGoalsForTab($event.index)">
-            <mat-tab [label]="ltgTab.text" *ngFor="let ltgTab of ltgHomeTabs">
-                <ng-template matTabContent>
-                    <div class="tab-content" fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="10px"
-                        fxLayout.xs="column" fxLayoutAlign.xs="start center">
-                        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="30px" fxLayout.xs="column"
-                            fxLayoutAlign.xs="start center" *ngIf="ltgTab.value === 'current'">
-                            <div fxflex>
-                                <button mat-raised-button color="primary" matTooltip="Add Long Term Goal"
-                                    (click)="showAddLtgForm()">
-                                    <mat-icon>add</mat-icon> Add a Goal
-                                </button>
-                            </div>
-                            <div fxflex>
-                                <mat-form-field>
-                                    <mat-select placeholder="Category filter" [formControl]="typeFilter">
-                                        <mat-select-trigger>
-                                            {{ typeFilter.value.text }}
-                                        </mat-select-trigger>
-                                        <mat-option [value]="{value:'all', text:'All Categories'}">All
-                                            Categories</mat-option>
-                                        <mat-option *ngFor="let gType of goalTypes" [value]="gType">
-                                            <mat-icon [class]="gType.icon_class">{{ gType.icon }}</mat-icon>{{
-                                            gType.text }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <mat-list class="width-100-pc">
-                            <div *ngFor="let key of displayedLtgs|objectkeys">
-                                <mat-list-item *ngFor="let goalRef of displayedLtgs[key]" class="dashboard-card">
-                                    <app-lt-goal-card class="width-100-pc" [goalObj]="goalRef" [tab]="ltgTab.value" 
-                                        (goalUpdated)="getGoalsForTab(tabIndex)">
-                                    </app-lt-goal-card>
-                                </mat-list-item>
-                            </div>
-                        </mat-list>
-                    </div>
-                </ng-template>
-            </mat-tab>
-        </mat-tab-group>
+        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="30px" fxLayout.xs="column"
+            fxLayoutAlign.xs="start center" class="header">
+            <div fxflex class="title">Long Term Goals</div>
+            <div fxflex>
+                <mat-form-field class="category-select">
+                    <mat-select [formControl]="currentStatus">
+                        <mat-select-trigger>
+                            {{ currentStatus.value.text }}
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let ltgTab of ltgHomeTabs" [value]="ltgTab">
+                            {{ ltgTab.text }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div fxflex>
+                <button mat-raised-button class="add-goal" color="primary" matTooltip="Add Long Term Goal"
+                    (click)="showAddLtgForm()">
+                    <mat-icon>add</mat-icon> Add a Goal
+                </button>
+            </div>
+            <div fxflex>
+                <mat-form-field class="category-select">
+                    <mat-select [formControl]="typeFilter">
+                        <mat-select-trigger>
+                            {{ typeFilter.value.text }}
+                        </mat-select-trigger>
+                        <mat-option [value]="allCategorySelectOption">All Categories</mat-option>
+                        <mat-option *ngFor="let gType of goalTypes" [value]="gType">
+                            <mat-icon [class]="gType.icon_class">{{ gType.icon }}</mat-icon>{{
+                            gType.text }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <mat-list class="width-100-pc">
+            <div *ngFor="let key of displayedLtgs|objectkeys">
+                <mat-list-item *ngFor="let goalRef of displayedLtgs[key]" class="list-item">
+                    <app-lt-goal-card class="width-100-pc" [goalObj]="goalRef" [tab]="currentStatus.value.value"
+                        (goalUpdated)="getGoalsForTab()">
+                    </app-lt-goal-card>
+                </mat-list-item>
+            </div>
+        </mat-list>
     </div>
 </div>
+<p></p>

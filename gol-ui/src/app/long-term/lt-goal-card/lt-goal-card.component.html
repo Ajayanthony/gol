@@ -6,17 +6,17 @@
             <mat-icon [class]="getGoalTypeIconColor(goalObj.goal_type)">
                 {{ getGoalTypeIcon(goalObj.goal_type) }}
             </mat-icon>
-            {{ goalObj.goal_title|titlecase }}
+            <div>{{ goalObj.goal_title|titlecase }}</div>
         </div>
         <div class="more-button">
-            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Edit Goal">
+            <button color="primary" (click)="handleEdit()" mat-icon-button matTooltip="Edit goal" class="card-menu">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Options" class="card-menu">
                 <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
                 <ng-template matMenuContent>
-                    <button color="primary" (click)="handleEdit()" mat-menu-item matTooltip="Edit Form will open">
-                        <mat-icon>edit</mat-icon> Edit goal
-                    </button>
                     <button *ngIf="isCurrentLtgTab()" (click)="handleStatusChange('successful')" color="primary" mat-menu-item
                         matTooltip="Mark Complete">
                         <mat-icon>done</mat-icon> Mark Completed
@@ -60,17 +60,17 @@
                 <b>Description:</b>
                 <p [innerHtml]="goalObj.description || 'N/A'"></p>
             </div>
-            <div fxflex>
+            <div fxflex *ngIf="goalObj.outcome">
                 <b>Expected Outcome:</b>
-                <p [innerHtml]="goalObj.outcome || 'N/A'"></p>
+                <p [innerHtml]="goalObj.outcome"></p>
             </div>
-            <div fxflex>
+            <div fxflex *ngIf="goalObj.obstacles">
                 <b>Obstacles:</b>
-                <p [innerHtml]="goalObj.obstacles || 'N/A'"></p>
+                <p [innerHtml]="goalObj.obstacles"></p>
             </div>
-            <div fxflex>
+            <div fxflex *ngIf="goalObj.plan">
                 <b>Plan:</b>
-                <p [innerHtml]="goalObj.plan || 'N/A'"></p>
+                <p [innerHtml]="goalObj.plan"></p>
             </div>
             <div fxflex>
                 <p><b>Closing Comments:</b> {{ goalObj.closing_comment || "N/A" }}</p>

@@ -13,25 +13,36 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .professional {
     color: rgb(21, 172, 188);
-    font-size: 17px;
+    font-size: 19px;
 }
 
 .health {
     color: rgb(221, 35, 35);
-    font-size: 17px
+    font-size: 18px;
 }
 
 .self-improvement {
     color: rgb(234, 147, 25);
-    font-size: 17px
+    font-size: 20px;
 }
 
 .personal {
     color: rgb(96, 25, 177);
-    font-size: 17px
+    font-size: 19px;
 }
 
 .financial {
     color: rgb(34, 18, 73);
-    font-size: 17px
+    font-size: 19px;
+}
+
+.ck-editor__editable_inline {
+    height: 400px;
+    margin-bottom: 10px;
+    font-size: 0.85em;
+    line-height: 1.24em;
+}
+
+.ck-editor__editable_inline table tbody tr td.ck-editor__editable.ck-editor__nested-editable {
+    vertical-align: top;
 }

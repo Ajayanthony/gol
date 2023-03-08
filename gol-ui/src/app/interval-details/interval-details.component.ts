@@ -23,10 +23,11 @@ export class IntervalDetailsComponent implements OnInit, OnDestroy {
   goalsList$: Observable<IGoal[]> = new Observable();
   @Input('interval') interval: string = 'weekly';
   startDate = new FormControl();
-  typeFilter: FormControl = new FormControl({
+  allCategorySelectOption = {
     value: 'all',
     text: 'All Categories',
-  });
+  };
+  typeFilter: FormControl = new FormControl(this.allCategorySelectOption);
   isHandset$: Observable<boolean>;
   summaryTitle = '';
   intervalDatesText = '';
@@ -75,8 +76,8 @@ export class IntervalDetailsComponent implements OnInit, OnDestroy {
   showAddGoalForm() {
     const dialogRef = this.dialog.open(AddGoalComponent, {
       data: { interval: this.interval, startDate: this.startDate.value },
-      width: '65%',
-      height: '65%',
+      width: '80%',
+      height: '75%',
       maxWidth: '100%',
     });
 

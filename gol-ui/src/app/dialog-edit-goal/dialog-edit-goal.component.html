@@ -1,21 +1,12 @@
 <h1 mat-dialog-title>Edit Goal</h1>
-<div mat-dialog-content [formGroup]="goalForm" style="height: calc(100% - 80px)">
- <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="10px" fxLayout.xs="column" class="flex-container">
-    <div fxFlex="80">
-      <mat-form-field class="full-width">
-        <input matInput placeholder="Goal Title" formControlName="goalTitle" />
-        <mat-error *ngIf="goalForm.controls['goalTitle'].hasError('required')">
-          Goal title is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-    </div>
-    <div fxFlexAlign="stretch">
-      <mat-button-toggle-group [formControl]="goalStatus" class="status-buttons" (change)="onStatusUpdate()">
-        <mat-button-toggle *ngFor="let st of Statuses" [value]="st.value" [matTooltip]="st.text">
-          <mat-icon>{{ st.icon }}</mat-icon>
-        </mat-button-toggle>
-      </mat-button-toggle-group>
-    </div>
+<div mat-dialog-content [formGroup]="goalForm" style="max-height: 75vh;">
+  <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="10px" fxLayout.xs="column" class="flex-container">
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Goal Title" formControlName="goalTitle" />
+      <mat-error *ngIf="goalForm.controls['goalTitle'].hasError('required')">
+        Goal title is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
   </div>
   <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px" class="flex-container">
     <div fxFill>
@@ -28,12 +19,12 @@
   <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px" fxLayout.xs="column" class="flex-container">
     <div fxflex>
       <mat-form-field class="full-width">
-        <input matInput type="number" placeholder="Actual Value" formControlName="actualValue" />
+        <input matInput type="number" placeholder="Completed" formControlName="actualValue" />
       </mat-form-field>
     </div>
     <div fxflex>
       <mat-form-field class="full-width">
-        <input matInput type="number" placeholder="Target Value" formControlName="targetValue" />
+        <input matInput type="number" placeholder="Target" formControlName="targetValue" />
       </mat-form-field>
     </div>
     <div fxflex>
@@ -71,8 +62,20 @@
 </div>
 <div mat-dialog-actions align="end">
   <div class="save-text">{{ autoSavedText }}</div>
-  <button mat-button class="mat-primary" mat-dialog-close>Cancel</button>
-  <button mat-button class="mat-primary" (click)="onSubmit()" cdkFocusInitial>
-    Save
+  <button mat-raised-button class="mat-primary" *ngIf="goalStatus !== 'in_progress'"
+    (click)="onStatusUpdate('in_progress')" mat-dialog-close>
+    <mat-icon>double_arrow</mat-icon>Mark active
   </button>
+  <button mat-raised-button class="mat-primary" *ngIf="goalStatus !== 'success'" (click)="onStatusUpdate('success')"
+    mat-dialog-close>
+    <mat-icon>done</mat-icon>Mark completed
+  </button>
+  <button mat-raised-button class="mat-primary" *ngIf="goalStatus !== 'failure'" (click)="onStatusUpdate('failure')"
+    mat-dialog-close>
+    <mat-icon>close</mat-icon>Mark failed
+  </button>
+  <button mat-raised-button class="mat-primary" (click)="onSubmit()">
+    <mat-icon>save</mat-icon>Save
+  </button>
+  <button mat-raised-button class="mat-primary" mat-dialog-close>Cancel</button>
 </div>

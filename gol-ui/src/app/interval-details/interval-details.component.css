@@ -1,6 +1,6 @@
 .grid-container {
   width: 80%;
-  max-width: 800px;
+  max-width: 600px;
 }
 
 .flex-container {
@@ -9,9 +9,15 @@
 }
 
 .header {
+  padding: 5px 15px 0;
+  height: 30px;
+}
+
+.title {
   font-family: 'Poppins', sans-serif;
-  margin-top: 10px;
   font-weight: bold;
+  font-size: small;
+  text-decoration: underline;
 }
 
 .example-spacer {
@@ -38,7 +44,25 @@
 }
 
 .add-goal {
-  width: 200px;
+  width: 105px;
+  padding-left: 4px;
+  height: 25px;
+  line-height: 20px;
+}
+
+.category-select {
+  width: 110px;
+}
+
+.chevron {
+  width: 20px;
+}
+
+.datepicker {
+  padding-left: 4px;
+  padding-right: 0px;
+  height: 25px;
+  line-height: 20px;
 }
 
 /* 

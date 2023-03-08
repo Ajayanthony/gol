@@ -2,21 +2,22 @@
 <div class="flex-container">
   <div [ngClass]="{'grid-container': (isHandset$ | async) === false }">
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" fxLayout.xs="column"
-      fxLayoutAlign.xs="start center">
+      fxLayoutAlign.xs="start center" class="header">
+      <div fxflex class="title">{{ interval | titlecase }} Goals</div>
       <div fxflex>
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" fxLayoutAlign.xs="start center">
           <div fxflex>
-            <button color="primary" mat-icon-button matTooltip="Prev" (click)="nextDateButtonClickHandler(-1)">
+            <button class="chevron" color="primary" mat-icon-button matTooltip="Prev" (click)="nextDateButtonClickHandler(-1)">
               <mat-icon>chevron_left</mat-icon>
             </button>
 
-            <button mat-flat-button (click)="picker.open()">{{ intervalDatesText }}</button>
+            <button class="datepicker" mat-flat-button (click)="picker.open()">{{ intervalDatesText }}</button>
             <mat-form-field color="primary" style="max-width: 0px;">
               <input matInput [matDatepicker]="picker" [formControl]="startDate" (dateChange)="handleDateChange()">
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
 
-            <button color="primary" mat-icon-button matTooltip="Next" (click)="nextDateButtonClickHandler(1)">
+            <button class="chevron" color="primary" mat-icon-button matTooltip="Next" (click)="nextDateButtonClickHandler(1)">
               <mat-icon>chevron_right</mat-icon>
             </button>
           </div>
@@ -29,12 +30,12 @@
         </button>
       </div>
       <div fxflex>
-        <mat-form-field>
-          <mat-select placeholder="Category filter" [formControl]="typeFilter">
+        <mat-form-field class="category-select">
+          <mat-select [formControl]="typeFilter">
             <mat-select-trigger>
               {{ typeFilter.value.text }}
             </mat-select-trigger>
-            <mat-option [value]="{value:'all', text:'All Categories'}">All Categories</mat-option>
+            <mat-option [value]="allCategorySelectOption">All Categories</mat-option>
             <mat-option *ngFor="let gType of goalTypes" [value]="gType">
               <mat-icon [class]="gType.icon_class">{{ gType.icon }}</mat-icon>{{ gType.text }}
             </mat-option>
@@ -43,5 +44,7 @@
       </div>
     </div>
     <app-goals-list #goalsList [goalsList]="goalsList$ | async" [typeFilter]="typeFilter.value.value"></app-goals-list>
+<p></p>
+<p></p>
   </div>
 </div>

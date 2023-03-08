@@ -1,4 +1,4 @@
-<div class="my-card mat-elevation-z2"
+<div class="my-card"
 [ngClass]="{
     'in-progress': goalObj.status === 'in_progress',
     'success': goalObj.status === 'success',
@@ -11,17 +11,17 @@
         <mat-icon [class]="getGoalTypeIconColor(goalObj.goal_type)">
           {{ getGoalTypeIcon(goalObj.goal_type) }}
         </mat-icon>
-        {{ goalObj.goal_title }}
+        <div>{{ goalObj.goal_title }}</div>
     </div>
     <div class="more-button">
-        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Edit Goal">
+        <button (click)="handleEditGoal()" mat-icon-button matTooltip="Edit goal" class="card-menu">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Options" class="card-menu">
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
           <ng-template matMenuContent>
-            <button mat-menu-item (click)="handleEditGoal()" matTooltip="Open Edit Goal dialog">
-              <mat-icon>edit</mat-icon>Edit goal
-            </button>
             <button mat-menu-item *ngIf="goalObj.status !== 'in_progress'" (click)="handleUpdateStatus('in_progress')">
               <mat-icon>double_arrow</mat-icon>Mark active
             </button>

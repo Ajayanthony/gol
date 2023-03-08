@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -26,30 +25,30 @@ export class LtTabsComponent implements OnInit, OnDestroy {
     [GoalPriorities[1].value]: [],
     [GoalPriorities[2].value]: [],
   };
-  typeFilter: FormControl = new FormControl({
+  allCategorySelectOption = {
     value: 'all',
     text: 'All Categories',
-  });
+  };
+  typeFilter: FormControl = new FormControl(this.allCategorySelectOption);
+  currentStatus: FormControl = new FormControl(LtgHomeTabs[0]);
   private fetchedLtgs: Array<LtGoal> = [];
-  tabIndex: number = 0;
   ltgHomeTabs = LtgHomeTabs;
   Icons = PriorityIcons;
   goalTypes = LtgType;
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(
-    private ltgService: LtgService,
-    private router: Router,
-    private route: ActivatedRoute,
-    public dialog: MatDialog
-  ) {}
+  constructor(private ltgService: LtgService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.getGoalsForTab(0);
+    this.getGoalsForTab();
 
     this.typeFilter.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe((change) => this.updateDisplayedLtgs());
+      .subscribe(() => this.updateDisplayedLtgs());
+
+    this.currentStatus.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.getGoalsForTab());
   }
 
   showAddLtgForm() {
@@ -61,8 +60,8 @@ export class LtTabsComponent implements OnInit, OnDestroy {
 
     const dialogRef = this.dialog.open(LtFormComponent, {
       data: { action: 'add' },
-      width: '65%',
-      height: '65%',
+      width: '90%',
+      height: '90%',
       maxWidth: '100%',
     });
 
@@ -71,15 +70,14 @@ export class LtTabsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         if (value === 'added') {
-          this.getGoalsForTab(0);
+          this.getGoalsForTab();
         }
       });
   }
 
-  getGoalsForTab(index: number) {
-    this.tabIndex = index;
+  getGoalsForTab() {
     this.ltgService
-      .getLtgsForTab(LtgHomeTabs[index].value)
+      .getLtgsForTab(this.currentStatus.value.value)
       .pipe(takeUntil(this.destroy$))
       .subscribe((goalsList) => {
         this.fetchedLtgs = goalsList;

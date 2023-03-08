@@ -84,7 +84,7 @@ export class LtFormComponent implements OnInit, OnDestroy {
           this.dialogRef.updateSize('90%', '90%');
           this.formFieldClass = 'full-width';
         } else {
-          this.dialogRef.updateSize('65%', '65%');
+          this.dialogRef.updateSize('90%', '90%');
           this.formFieldClass = 'width150';
         }
       });

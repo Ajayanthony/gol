@@ -72,7 +72,7 @@ export class AddGoalComponent implements AfterViewInit, OnDestroy {
           this.dialogRef.updateSize('100%', '100%');
           this.formFieldClass = 'full-width';
         } else {
-          this.dialogRef.updateSize('65%', '65%');
+          this.dialogRef.updateSize('80%', '75%');
           this.formFieldClass = 'width100';
         }
       });

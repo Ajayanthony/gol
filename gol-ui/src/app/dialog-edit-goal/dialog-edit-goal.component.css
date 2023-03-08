@@ -31,8 +31,3 @@ textarea {
   font-size: smaller;
   color: #a99696;
 }
-
-:host ::ng-deep .ck-editor__editable_inline {
-   height: 185px;
-   margin-bottom: 10px;
-}

@@ -48,10 +48,13 @@
 }
 
 .width150 {
-  width: 150px;
+  width: 120px;
+}
+
+.width50 {
+  width: 70px;
 }
 
 :host ::ng-deep .ck-editor__editable_inline {
-    height:140px;
-    margin-bottom: 10px;
+    height: 400px;
 }

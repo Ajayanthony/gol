@@ -19,8 +19,7 @@ let timeoutId: number;
 export class DialogEditGoalComponent implements OnInit, AfterViewInit, OnDestroy {
   goalPriorities = constants.GoalPriorities;
   goalTypes = constants.GoalTypes;
-  Statuses = constants.GoalStatuses;
-  goalStatus: FormControl = new FormControl();
+  goalStatus: string = '';
   prevGoal?: IGoal;
   newData: any = {};
   autoSavedText: string = '';
@@ -54,21 +53,13 @@ export class DialogEditGoalComponent implements OnInit, AfterViewInit, OnDestroy
       .pipe(
         tap(() => {
           this.clearTimer();
-        })
+        }),
+        takeUntil(this.destroy$)
       )
       .subscribe(() => {});
   }
 
   ngOnInit(): void {
-    this.goalStatus.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((val) => {
-        if (val !== 'in_progress')
-          this.goalForm.controls['closeComment'].enable({ emitEvent: false });
-        else
-          this.goalForm.controls['closeComment'].disable({ emitEvent: false });
-      });
-
     this.prevGoal = this.data.goal;
 
     this.goalForm.setValue({
@@ -81,7 +72,7 @@ export class DialogEditGoalComponent implements OnInit, AfterViewInit, OnDestroy
       closeComment: this.prevGoal.close_comment || null,
     });
 
-    this.goalStatus.setValue(this.prevGoal.status);
+    this.goalStatus = this.prevGoal.status;
 
     this.goalForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.onFormFieldChange();
@@ -120,8 +111,13 @@ export class DialogEditGoalComponent implements OnInit, AfterViewInit, OnDestroy
     }, 30000);
   }
 
-  onStatusUpdate() {
-    this.data.updateGoalStatus(of({ status: this.goalStatus.value }));
+  onStatusUpdate(goalStatus: string) {
+    this.data.updateGoalStatus(
+      of({
+        status: goalStatus,
+        close_comment: this.goalForm.get('closeComment')?.value,
+      })
+    );
   }
 
   private clearTimer() {

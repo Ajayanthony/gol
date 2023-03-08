@@ -1,32 +1,13 @@
 <mat-list>
     <div *ngFor="let sortField of order">
-        <mat-list-item *ngFor="let goalRef of goalsList[sortField.value]" class="dashboard-card">
+        <mat-list-item *ngFor="let goalRef of goalsList[sortField.value]" class="list-item">
             <app-goal-card [goalRef]="goalRef" style="width: 100%;" (goalUpdated)="updateGoalsList()"></app-goal-card>
         </mat-list-item>
     </div>
+    <mat-list-item *ngFor="let goalRef of successGoals" class="list-item">
+        <app-goal-card [goalRef]="goalRef" style="width: 100%;" (goalUpdated)="updateGoalsList()"></app-goal-card>
+    </mat-list-item>
+    <mat-list-item *ngFor="let goalRef of failureGoals" class="list-item">
+        <app-goal-card [goalRef]="goalRef" style="width: 100%;" (goalUpdated)="updateGoalsList()"></app-goal-card>
+    </mat-list-item>
 </mat-list>
-<p></p>
-
-<div *ngIf="successGoals.length > 0">
-    <mat-list>
-        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px" class="success">
-            <div>Completed</div>
-        </div>
-        <mat-list-item *ngFor="let goalRef of successGoals" class="dashboard-card">
-            <app-goal-card [goalRef]="goalRef" style="width: 100%;" (goalUpdated)="updateGoalsList()"></app-goal-card>
-        </mat-list-item>
-    </mat-list>
-</div>
-<p></p>
-
-<div *ngIf="failureGoals.length > 0">
-    <mat-list>
-        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px" class="failed">
-            <div>Failed</div>
-        </div>
-        <mat-list-item *ngFor="let goalRef of failureGoals" class="dashboard-card">
-            <app-goal-card [goalRef]="goalRef" style="width: 100%;" (goalUpdated)="updateGoalsList()"></app-goal-card>
-        </mat-list-item>
-    </mat-list>
-</div>
-<p></p>
