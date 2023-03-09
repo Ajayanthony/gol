@@ -9,6 +9,7 @@ services:
 
   gol-backend:
     container_name: gol-backend
+    env_file: ./gol-backend/.env
     restart: always
     build: gol-backend
     networks:

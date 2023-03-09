@@ -1,3 +1,7 @@
-//exports.dbConnectionString = "mongodb://gol_service:gol@localhost:27018/gol%5fdb";
+let user = process.env.MONGO_USER;
+let pwd = process.env.MONGO_PWD;
+let url = process.env.HOST_URL;
+let port = process.env.PORT;
+
 exports.dbConnectionString =
-    "mongodb://gol_service:gol@mongo-local:27017/gol%5fdb";
+    "mongodb://" + user + ":" + pwd + "@" + url + ":" + port + "/gol%5fdb";

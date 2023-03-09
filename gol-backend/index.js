@@ -1,16 +1,20 @@
-const express = require('express');
-const cors = require('cors');
+require("dotenv").config();
+
+const express = require("express");
+const cors = require("cors");
+
 const goalRouter = require("./routes/goal-router");
-const dailyGoalsRouter = require('./routes/daily-goal-router');
+const dailyGoalsRouter = require("./routes/daily-goal-router");
 const weeklyGoalsRouter = require("./routes/weekly-goal-router");
 const monthlyGoalsRouter = require("./routes/monthly-goal-router");
 const ltGoalsRouter = require("./routes/lt-goal-router");
+
 const app = express();
 const PORT = 8000;
 const HOST = "0.0.0.0";
-const apiUrl = '/api/v1';
-const goalUrl = apiUrl + '/goal';
-const dailygoalUrl = apiUrl + '/dailygoal';
+const apiUrl = "/api/v1";
+const goalUrl = apiUrl + "/goal";
+const dailygoalUrl = apiUrl + "/dailygoal";
 const weeklygoalUrl = apiUrl + "/weeklygoal";
 const monthlygoalUrl = apiUrl + "/monthlygoal";
 const ltGoalsUrl = apiUrl + "/longterm";
@@ -20,7 +24,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 app.use(cors());
 app.use(function (err, req, res, next) {
     console.error(err.stack);
-    res.status(500).send('Something broke!');
+    res.status(500).send("Something broke!");
 });
 
 app.use(goalUrl, goalRouter);
@@ -29,8 +33,8 @@ app.use(weeklygoalUrl, weeklyGoalsRouter);
 app.use(monthlygoalUrl, monthlyGoalsRouter);
 app.use(ltGoalsUrl, ltGoalsRouter);
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
+app.get("/", (req, res) => {
+    res.send("Hello World");
 });
 
 app.listen(PORT, HOST);

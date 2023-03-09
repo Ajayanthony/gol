@@ -2,6 +2,7 @@ const MongoClient = require("mongodb").MongoClient;
 const dbConfig = require("../../config/db.config");
 
 exports.getGolDb = async () => {
+    console.log(dbConfig.dbConnectionString);
     const client = await MongoClient.connect(
         dbConfig.dbConnectionString,
         {
