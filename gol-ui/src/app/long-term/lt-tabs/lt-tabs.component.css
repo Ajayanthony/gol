@@ -8,7 +8,7 @@
 }
 
 .grid-container {
-  /* width: 80%; */
+  width: 100%;
   max-width: 600px;
 }
 
@@ -45,4 +45,8 @@
   margin-top: 2px;
   height: auto;
   max-width: 600px;
+}
+
+.mat-list-item-content {
+  padding: 0px;
 }

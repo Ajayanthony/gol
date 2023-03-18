@@ -46,10 +46,10 @@
         fxLayoutGap="5px">
             <div fxLayout="row" fxLayoutAlign="space-between center">
                 <div fxflex>
-                    <b>Created on:</b> {{ goalObj.created_date?.format("DD-MM-YYYY") }}
+                    <b>Created on:</b> {{ goalObj.created_date.format("DD-MM-YYYY") }}
                 </div>
                 <div fxflex>
-                    <b>Target Date:</b> {{ goalObj.target_date?.format("DD-MM-YYYY") }}
+                    <b>Target Date:</b> {{ goalObj.target_date.format("DD-MM-YYYY") }}
                 </div>
                 <div fxflex>
                     <b>Progress:</b> {{ goalObj.completed_parts }}/{{ goalObj.total_parts }}

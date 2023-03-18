@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import {
@@ -42,6 +42,7 @@ export class AddGoalComponent implements AfterViewInit, OnDestroy {
   summaryTitle = '';
   intervalDatesText = '';
   destroy$: Subject<boolean> = new Subject<boolean>();
+  isHandset$: Observable<boolean>;
 
   constructor(
     private fb: FormBuilder,
@@ -51,11 +52,13 @@ export class AddGoalComponent implements AfterViewInit, OnDestroy {
     private breakPoint: BreakpointService,
     private notifierService: NotifierService
   ) {
+    this.isHandset$ = breakPoint.getIsHandset$().pipe(takeUntil(this.destroy$));
     this.interval.setValue(data.interval);
     this.startDate.setValue(moment(data.startDate));
     [this.summaryTitle, this.intervalDatesText] = createSummaryText(
       data.interval,
-      moment(data.startDate)
+      moment(data.startDate),
+      this.isHandset$
     );
     this.summaryTitle = this.summaryTitle.substring(
       0,

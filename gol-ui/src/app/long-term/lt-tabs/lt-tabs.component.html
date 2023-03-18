@@ -1,9 +1,9 @@
 <p></p>
 <div class="flex-container">
     <div class="grid-container">
-        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="30px" fxLayout.xs="column"
+        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" fxLayout.xs="row"
             fxLayoutAlign.xs="start center" class="header">
-            <div fxflex class="title">Long Term Goals</div>
+            <div fxflex class="title">{{ (isHandset$ | async) === false ? 'Long Term Goals' : 'LTG' }}</div>
             <div fxflex>
                 <mat-form-field class="category-select">
                     <mat-select [formControl]="currentStatus">
@@ -17,9 +17,9 @@
                 </mat-form-field>
             </div>
             <div fxflex>
-                <button mat-raised-button class="add-goal" color="primary" matTooltip="Add Long Term Goal"
-                    (click)="showAddLtgForm()">
-                    <mat-icon>add</mat-icon> Add a Goal
+                <button mat-raised-button color="primary" matTooltip="Add Long Term Goal"
+                    [ngClass]="{'add-goal': (isHandset$ | async) === false}" (click)="showAddLtgForm()">
+                    <mat-icon>add</mat-icon>{{ (isHandset$ | async) === false ? 'Add a goal' : '' }}
                 </button>
             </div>
             <div fxflex>

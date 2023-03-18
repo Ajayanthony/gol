@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import {
@@ -11,6 +11,7 @@ import {
   LtgType,
 } from 'src/app/common/constants';
 import { LtGoal } from 'src/app/common/LtGoal';
+import { BreakpointService } from 'src/app/service/breakpoint.service';
 import { LtgService } from 'src/app/service/ltg.service';
 import { LtFormComponent } from '../lt-form/lt-form.component';
 
@@ -36,8 +37,15 @@ export class LtTabsComponent implements OnInit, OnDestroy {
   Icons = PriorityIcons;
   goalTypes = LtgType;
   destroy$: Subject<boolean> = new Subject<boolean>();
-
-  constructor(private ltgService: LtgService, public dialog: MatDialog) {}
+  isHandset$: Observable<boolean>;
+  
+  constructor(
+    private ltgService: LtgService,
+    public dialog: MatDialog,
+    private breakPoint: BreakpointService
+  ) {
+    this.isHandset$ = breakPoint.getIsHandset$().pipe(takeUntil(this.destroy$));
+  }
 
   ngOnInit(): void {
     this.getGoalsForTab();

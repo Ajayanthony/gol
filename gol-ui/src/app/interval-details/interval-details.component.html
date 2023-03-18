@@ -1,17 +1,18 @@
 <p></p>
 <div class="flex-container">
-  <div [ngClass]="{'grid-container': (isHandset$ | async) === false }">
-    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" fxLayout.xs="column"
+  <div class='grid-container'>
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" fxLayout.xs="row"
       fxLayoutAlign.xs="start center" class="header">
-      <div fxflex class="title">{{ interval | titlecase }} Goals</div>
+      <div fxflex *ngIf="(isHandset$ | async) === false" class="title">{{ interval | titlecase }} Goals</div>
       <div fxflex>
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" fxLayoutAlign.xs="start center">
-          <div fxflex>
+          <div fxflex fxLayout="row" fxLayoutAlign="start center">
             <button class="chevron" color="primary" mat-icon-button matTooltip="Prev" (click)="nextDateButtonClickHandler(-1)">
               <mat-icon>chevron_left</mat-icon>
             </button>
 
-            <button class="datepicker" mat-flat-button (click)="picker.open()">{{ intervalDatesText }}</button>
+            <button class="datepicker" mat-flat-button (click)="picker.open()">
+              {{ intervalDatesText }}</button>
             <mat-form-field color="primary" style="max-width: 0px;">
               <input matInput [matDatepicker]="picker" [formControl]="startDate" (dateChange)="handleDateChange()">
               <mat-datepicker #picker></mat-datepicker>
@@ -24,9 +25,9 @@
         </div>
       </div>
       <div fxflex>
-        <button mat-raised-button class="add-goal" color="primary" matTooltip="Add New Goal"
-          (click)="showAddGoalForm()">
-          <mat-icon>add</mat-icon> Add a goal
+        <button mat-raised-button color="primary" matTooltip="Add New Goal" (click)="showAddGoalForm()"
+          [ngClass]="{'add-goal': (isHandset$ | async) === false}">
+          <mat-icon>add</mat-icon>{{ (isHandset$ | async) === false ? 'Add a goal' : '' }}
         </button>
       </div>
       <div fxflex>

@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { Observable, Subject } from 'rxjs';
 import { GoalStatuses, Intervals, ltgDateFormat, SortFields } from './constants';
 import { IGoal } from './Goal';
 import { Moment } from 'moment';
@@ -14,10 +15,10 @@ export function getStatusText(value: string): string {
 }
 
 export function getHostURL(): string {
-  console.log(
-    window.location.protocol + '//' + window.location.hostname + ":" + 11002
-  );
-  return window.location.protocol + '//' + window.location.hostname + ":" + 11002;
+  // console.log(
+  //   window.location.protocol + '//' + window.location.hostname + ":" + 11002
+  // );
+  return window.location.protocol + '//10.0.0.224:11002';
 }
 
 export function getIntervalBaseUrl(interval: string): string {
@@ -66,7 +67,11 @@ export function createLtGoal(ltg: any) {
   return ltg;
 }
 
-export function createSummaryText(interval: string, startDate: Moment) : string[]{
+export function createSummaryText(
+  interval: string,
+  startDate: Moment,
+  isHandset: Observable<boolean>
+): string[] {
   let summaryTitle = '';
   let intervalDatesText = '';
   if (interval === Intervals[0].value) {
@@ -78,9 +83,9 @@ export function createSummaryText(interval: string, startDate: Moment) : string[
       tempStartDate.day() == 0 ? tempStartDate.day(-6) : tempStartDate.day(1);
     summaryTitle = 'Weekly Goals';
     intervalDatesText =
-      weekStart.format('Do MMM') +
+      weekStart.format(isHandset ? 'Do' : 'Do MMM') +
       ' to ' +
-      weekStart.add(6, 'days').format('Do MMM');
+      weekStart.add(6, 'days').format(isHandset ? 'Do' : 'Do MMM');
   } else if (interval === Intervals[2].value) {
     summaryTitle = 'Monthly Goals';
     intervalDatesText = startDate.format('MMMM YYYY');

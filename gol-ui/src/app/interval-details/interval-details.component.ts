@@ -64,7 +64,8 @@ export class IntervalDetailsComponent implements OnInit, OnDestroy {
   handleDateChange() {
     [this.summaryTitle, this.intervalDatesText] = createSummaryText(
       this.interval,
-      this.startDate.value
+      this.startDate.value,
+      this.isHandset$
     );
     this.intervalService.getIntervalGoals(this.interval, this.startDate.value);
   }
